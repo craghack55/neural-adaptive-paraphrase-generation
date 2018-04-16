@@ -4,6 +4,7 @@ import logging
 import tensorflow as tf
 from seq2seq import Seq2seq
 from data_handler import Data
+from tensor2tensor.utils import bleu_hook
 
 FLAGS = tf.flags.FLAGS
 
@@ -17,7 +18,8 @@ tf.flags.DEFINE_string('optimizer'          , 'Adam'        , 'Name of the train
 tf.flags.DEFINE_integer('batch_size'        , 32            , 'random seed for training sampling')
 tf.flags.DEFINE_integer('print_every'       , 1           , 'print records every n iteration')
 tf.flags.DEFINE_integer('iterations'        , 1         , 'number of iterations to train')
-tf.flags.DEFINE_string('model_dir'          , 'checkpointsPPDB' , 'Directory where to save the model')
+tf.flags.DEFINE_integer('block_size'        , 1         , 'number of blocks to train')
+tf.flags.DEFINE_string('model_dir'          , 'checkpoints' , 'Directory where to save the model')
 
 tf.flags.DEFINE_integer('input_max_length'  , 30            , 'Max length of input sequence to use')
 tf.flags.DEFINE_integer('output_max_length' , 30            , 'Max length of output sequence to use')
@@ -31,20 +33,28 @@ tf.flags.DEFINE_string('input_test_filename', 'data/mscoco/test_source.txt', 'Na
 tf.flags.DEFINE_string('output_test_filename', 'data/mscoco/test_target.txt', 'Name of the train target file')
 tf.flags.DEFINE_string('vocab_filename', 'data/mscoco/train_vocab.txt', 'Name of the vocab file')
 
+def evaluate(reference_corpus, translation_corpus):
+    bleu = bleu_hook.compute_bleu(reference_corpus, translation_corpus)
+    return bleu
+
 
 def main(argv):
     tf.logging._logger.setLevel(logging.INFO)
 
-    data  = Data(FLAGS, "train")
+    data  = Data(FLAGS)
     model = Seq2seq(data.vocab_size, FLAGS)
 
     input_fn, feed_fn = data.make_input_fn()
+    test_fn = data.make_test_fn()
     print_inputs = tf.train.LoggingTensorHook(['source', 'target', 'predict'], every_n_iter=FLAGS.print_every,
             formatter=data.get_formatter(['source', 'target', 'predict']))
 
     estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=FLAGS.model_dir, params=FLAGS)
     estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=FLAGS.iterations)
 
+    test_paraphrases = list(estimator.predict(test_fn))
+    data.builtTranslationCorpus(test_paraphrases)
+    print(evaluate(data.reference_corpus, data.translation_corpus))
 
 
 if __name__ == "__main__":

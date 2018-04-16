@@ -46,20 +46,26 @@ class Seq2seq:
 
                 return outputs[0]
 
-        train_helper = tf.contrib.seq2seq.TrainingHelper(output_embed, output_lengths)
-        pred_helper = tf.contrib.seq2seq.GreedyEmbeddingHelper(embeddings, start_tokens=tf.to_int32(start_tokens), end_token=1)
-        train_outputs = decode(train_helper, 'decode')
-        pred_outputs = decode(pred_helper, 'decode', reuse=True)
+        if(mode == tf.contrib.learn.ModeKeys.INFER):
+            pred_helper = tf.contrib.seq2seq.GreedyEmbeddingHelper(embeddings, start_tokens=tf.to_int32(start_tokens), end_token=1)
+            pred_outputs = decode(pred_helper, 'decode')
+            tf.identity(pred_outputs.sample_id[0], name='predict')
+            return tf.estimator.EstimatorSpec(mode=mode, predictions=pred_outputs.sample_id)
+        else:
+            train_helper = tf.contrib.seq2seq.TrainingHelper(output_embed, output_lengths)
+            pred_helper = tf.contrib.seq2seq.GreedyEmbeddingHelper(embeddings, start_tokens=tf.to_int32(start_tokens), end_token=1)
+            train_outputs = decode(train_helper, 'decode')
+            pred_outputs = decode(pred_helper, 'decode', reuse=True)
 
-        tf.identity(train_outputs.sample_id[0], name='train_pred')
-        weights = tf.to_float(tf.not_equal(train_output[:, :-1], 1))
-        loss = tf.contrib.seq2seq.sequence_loss(train_outputs.rnn_output, output, weights=weights)
-        train_op = layers.optimize_loss(
-            loss, tf.train.get_global_step(),
-            optimizer=params.optimizer,
-            learning_rate=params.learning_rate,
-            summaries=['loss', 'learning_rate'])
+            tf.identity(train_outputs.sample_id[0], name='train_pred')
+            weights = tf.to_float(tf.not_equal(train_output[:, :-1], 1))
+            loss = tf.contrib.seq2seq.sequence_loss(train_outputs.rnn_output, output, weights=weights)
+            train_op = layers.optimize_loss(
+                loss, tf.train.get_global_step(),
+                optimizer=params.optimizer,
+                learning_rate=params.learning_rate,
+                summaries=['loss', 'learning_rate'])
 
-        tf.identity(pred_outputs.sample_id[0], name='predict')
-        return tf.estimator.EstimatorSpec(mode=mode, predictions=pred_outputs.sample_id, loss=loss, train_op=train_op)
+            tf.identity(pred_outputs.sample_id[0], name='predict')
+            return tf.estimator.EstimatorSpec(mode=mode, predictions=pred_outputs.sample_id, loss=loss, train_op=train_op)
 
