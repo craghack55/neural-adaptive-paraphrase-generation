@@ -35,6 +35,7 @@ class Seq2seq:
                 cell = tf.contrib.rnn.LSTMCell(num_units=num_units)
                 attn_cell = tf.contrib.seq2seq.AttentionWrapper(cell, attention_mechanism, attention_layer_size=num_units / 2)
                 out_cell = tf.contrib.rnn.OutputProjectionWrapper(attn_cell, self.vocab_size, reuse=reuse)
+                # Beam Search comes here.
                 decoder = tf.contrib.seq2seq.BasicDecoder(
                     cell=out_cell, helper=helper,
                     initial_state=out_cell.zero_state(
@@ -42,12 +43,13 @@ class Seq2seq:
                 outputs = tf.contrib.seq2seq.dynamic_decode(
                     decoder=decoder, output_time_major=False,
                     impute_finished=True, maximum_iterations=self.FLAGS.output_max_length)
+
                 return outputs[0]
 
         train_helper = tf.contrib.seq2seq.TrainingHelper(output_embed, output_lengths)
         pred_helper = tf.contrib.seq2seq.GreedyEmbeddingHelper(embeddings, start_tokens=tf.to_int32(start_tokens), end_token=1)
         train_outputs = decode(train_helper, 'decode')
-        pred_outputs  = decode(pred_helper, 'decode', reuse=True)
+        pred_outputs = decode(pred_helper, 'decode', reuse=True)
 
         tf.identity(train_outputs.sample_id[0], name='train_pred')
         weights = tf.to_float(tf.not_equal(train_output[:, :-1], 1))

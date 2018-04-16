@@ -16,7 +16,7 @@ tf.flags.DEFINE_float('learning_rate'       , 0.001         , 'learning rate for
 tf.flags.DEFINE_string('optimizer'          , 'Adam'        , 'Name of the train source file')
 tf.flags.DEFINE_integer('batch_size'        , 32            , 'random seed for training sampling')
 tf.flags.DEFINE_integer('print_every'       , 1           , 'print records every n iteration')
-tf.flags.DEFINE_integer('iterations'        , 10         , 'number of iterations to train')
+tf.flags.DEFINE_integer('iterations'        , 1         , 'number of iterations to train')
 tf.flags.DEFINE_string('model_dir'          , 'checkpointsPPDB' , 'Directory where to save the model')
 
 tf.flags.DEFINE_integer('input_max_length'  , 30            , 'Max length of input sequence to use')
@@ -25,28 +25,27 @@ tf.flags.DEFINE_integer('output_max_length' , 30            , 'Max length of out
 tf.flags.DEFINE_bool('use_residual_lstm'    , True          , 'To use the residual connection with the residual LSTM')
 
 # Data related
-tf.flags.DEFINE_string('input_filename', 'data/ppdb/train_source.txt', 'Name of the train source file')
-tf.flags.DEFINE_string('output_filename', 'data/ppdb/train_target.txt', 'Name of the train target file')
-tf.flags.DEFINE_string('input_test_filename', 'data/ppdb/test_source.txt', 'Name of the train source file')
-tf.flags.DEFINE_string('output_test_filename', 'data/ppdb/test_target.txt', 'Name of the train target file')
-tf.flags.DEFINE_string('vocab_filename', 'data/ppdb/train_vocab.txt', 'Name of the vocab file')
+tf.flags.DEFINE_string('input_filename', 'data/mscoco/train_source.txt', 'Name of the train source file')
+tf.flags.DEFINE_string('output_filename', 'data/mscoco/train_target.txt', 'Name of the train target file')
+tf.flags.DEFINE_string('input_test_filename', 'data/mscoco/test_source.txt', 'Name of the train source file')
+tf.flags.DEFINE_string('output_test_filename', 'data/mscoco/test_target.txt', 'Name of the train target file')
+tf.flags.DEFINE_string('vocab_filename', 'data/mscoco/train_vocab.txt', 'Name of the vocab file')
 
 
 def main(argv):
     tf.logging._logger.setLevel(logging.INFO)
 
-    data  = Data(FLAGS)
+    data  = Data(FLAGS, "train")
     model = Seq2seq(data.vocab_size, FLAGS)
 
-    input_fn, feed_fn, eval_feed_fn = data.make_input_fn()
+    input_fn, feed_fn = data.make_input_fn()
     print_inputs = tf.train.LoggingTensorHook(['source', 'target', 'predict'], every_n_iter=FLAGS.print_every,
             formatter=data.get_formatter(['source', 'target', 'predict']))
 
     estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=FLAGS.model_dir, params=FLAGS)
     estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=FLAGS.iterations)
 
-    e = estimator.evaluate(input_fn=input_fn, hooks=[tf.train.FeedFnHook(eval_feed_fn), print_inputs], steps=FLAGS.iterations)
-    print(e)
+
 
 if __name__ == "__main__":
     tf.app.run()
