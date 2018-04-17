@@ -16,6 +16,8 @@ class Data:
         self.vocab_size = len(self.vocab)
         self.reference_corpus = []
         self.translation_corpus = []
+        self.iteration = 0
+        self.ak = []
 
     def builtTranslationCorpus(self, translations):
         corpus = []
@@ -78,14 +80,9 @@ class Data:
             return { 'input': inp, 'output': output}, None
 
         def sampler():
-            i = 0
             while True:
                 with open(self.FLAGS.input_filename) as finput, open(self.FLAGS.output_filename) as foutput:
                     for source,target in zip(finput, foutput):
-                        print(i)
-                        if(i >= self.FLAGS.block_size):
-                            break
-                        i += 1
                         yield {
                             'input': self.tokenize_and_map(source)[:self.FLAGS.input_max_length - 1] + [self.END_TOKEN],
                             'output': self.tokenize_and_map(target)[:self.FLAGS.output_max_length - 1] + [self.END_TOKEN]
@@ -106,6 +103,7 @@ class Data:
             for i in range(self.FLAGS.batch_size):
                 source[i] += [self.END_TOKEN] * (input_length - len(source[i]))
                 target[i] += [self.END_TOKEN] * (output_length - len(target[i]))
+
             return { 'input:0': source, 'output:0': target }
 
         return input_fn, feed_fn
