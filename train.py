@@ -11,14 +11,17 @@ FLAGS = tf.flags.FLAGS
 # Model related
 tf.flags.DEFINE_integer('num_units'         , 256           , 'Number of units in a LSTM cell')
 tf.flags.DEFINE_integer('embed_dim'         , 256           , 'Size of the embedding vector')
+tf.flags.DEFINE_integer('length_penalty_weight'         , 0           , '')
+tf.flags.DEFINE_integer('beam_width'         , 5           , '')
+
 
 # Training related
 tf.flags.DEFINE_float('learning_rate'       , 0.001         , 'learning rate for the optimizer')
 tf.flags.DEFINE_string('optimizer'          , 'Adam'        , 'Name of the train source file')
-tf.flags.DEFINE_integer('batch_size'        , 32            , 'random seed for training sampling')
-tf.flags.DEFINE_integer('print_every'       , 1           , 'print records every n iteration')
-tf.flags.DEFINE_integer('iterations'        , 1         , 'number of iterations to train')
-tf.flags.DEFINE_integer('block_size'        , 1         , 'number of blocks to train')
+tf.flags.DEFINE_integer('batch_size'        , 100            , 'random seed for training sampling')
+tf.flags.DEFINE_integer('print_every'       , 1500           , 'print records every n iteration')
+tf.flags.DEFINE_integer('iterations'        , 1500         , 'number of iterations to train')
+tf.flags.DEFINE_integer('block_size'        , 167148         , 'number of blocks to train')
 tf.flags.DEFINE_string('model_dir'          , 'checkpoints' , 'Directory where to save the model')
 
 tf.flags.DEFINE_integer('input_max_length'  , 30            , 'Max length of input sequence to use')

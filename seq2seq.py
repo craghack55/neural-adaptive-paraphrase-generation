@@ -26,7 +26,7 @@ class Seq2seq:
         encoder_outputs, encoder_final_state = tf.nn.dynamic_rnn(cell, input_embed, dtype=tf.float32)
 
 
-        def decode(helper, scope, reuse=None):
+        def decode(helper, mode, scope, reuse=None):
             # Decoder is partially based on @ilblackdragon//tf_example/seq2seq.py
             with tf.variable_scope(scope, reuse=reuse):
                 attention_mechanism = tf.contrib.seq2seq.BahdanauAttention(
@@ -36,10 +36,22 @@ class Seq2seq:
                 attn_cell = tf.contrib.seq2seq.AttentionWrapper(cell, attention_mechanism, attention_layer_size=num_units / 2)
                 out_cell = tf.contrib.rnn.OutputProjectionWrapper(attn_cell, self.vocab_size, reuse=reuse)
                 # Beam Search comes here.
+
+                # if(mode == tf.contrib.learn.ModeKeys.INFER):
+                #     my_decoder = tf.contrib.seq2seq.BeamSearchDecoder(cell=out_cell, embedding=embeddings, start_tokens=tf.to_int32(start_tokens),
+                #                                                         end_token=1, initial_state=out_cell.zero_state(dtype=tf.float32, batch_size=batch_size), 
+                #                                                         beam_width=FLAGS.beam_width, output_layer=self.output_layer, length_penalty_weight=FLAGS.length_penalty_weight)
+                # else:
+                #     decoder = tf.contrib.seq2seq.BasicDecoder(
+                #         cell=out_cell, helper=helper,
+                #         initial_state=out_cell.zero_state(
+                #             dtype=tf.float32, batch_size=batch_size))
+
                 decoder = tf.contrib.seq2seq.BasicDecoder(
                     cell=out_cell, helper=helper,
                     initial_state=out_cell.zero_state(
-                        dtype=tf.float32, batch_size=batch_size))
+                    dtype=tf.float32, batch_size=batch_size))
+
                 outputs = tf.contrib.seq2seq.dynamic_decode(
                     decoder=decoder, output_time_major=False,
                     impute_finished=True, maximum_iterations=self.FLAGS.output_max_length)
@@ -48,14 +60,14 @@ class Seq2seq:
 
         if(mode == tf.contrib.learn.ModeKeys.INFER):
             pred_helper = tf.contrib.seq2seq.GreedyEmbeddingHelper(embeddings, start_tokens=tf.to_int32(start_tokens), end_token=1)
-            pred_outputs = decode(pred_helper, 'decode')
+            pred_outputs = decode(None, mode, 'decode')
             tf.identity(pred_outputs.sample_id[0], name='predict')
             return tf.estimator.EstimatorSpec(mode=mode, predictions=pred_outputs.sample_id)
         else:
             train_helper = tf.contrib.seq2seq.TrainingHelper(output_embed, output_lengths)
             pred_helper = tf.contrib.seq2seq.GreedyEmbeddingHelper(embeddings, start_tokens=tf.to_int32(start_tokens), end_token=1)
-            train_outputs = decode(train_helper, 'decode')
-            pred_outputs = decode(pred_helper, 'decode', reuse=True)
+            train_outputs = decode(train_helper, mode, 'decode')
+            pred_outputs = decode(pred_helper, mode, 'decode', reuse=True)
 
             tf.identity(train_outputs.sample_id[0], name='train_pred')
             weights = tf.to_float(tf.not_equal(train_output[:, :-1], 1))
