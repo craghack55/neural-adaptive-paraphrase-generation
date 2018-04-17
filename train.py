@@ -20,7 +20,7 @@ tf.flags.DEFINE_float('learning_rate'       , 0.001         , 'learning rate for
 tf.flags.DEFINE_string('optimizer'          , 'Adam'        , 'Name of the train source file')
 tf.flags.DEFINE_integer('batch_size'        , 100            , 'random seed for training sampling')
 tf.flags.DEFINE_integer('print_every'       , 1           , 'print records every n iteration')
-tf.flags.DEFINE_integer('iterations'        , 10         , 'number of iterations to train')
+tf.flags.DEFINE_integer('iterations'        , 16000         , 'number of iterations to train')
 tf.flags.DEFINE_integer('block_size'        , 500         , 'number of blocks to train')
 tf.flags.DEFINE_string('model_dir'          , 'checkpoints' , 'Directory where to save the model')
 
@@ -39,7 +39,6 @@ tf.flags.DEFINE_string('vocab_filename', 'data/mscoco/train_vocab.txt', 'Name of
 def evaluate(reference_corpus, translation_corpus):
     bleu = bleu_hook.compute_bleu(reference_corpus, translation_corpus)
     return bleu
-
 
 def main(argv):
     tf.logging._logger.setLevel(logging.INFO)
