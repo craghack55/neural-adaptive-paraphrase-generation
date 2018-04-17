@@ -79,10 +79,13 @@ class Data:
 
         def sampler():
             i = 0
-            while i < self.FLAGS.block_size:
+            while True:
                 with open(self.FLAGS.input_filename) as finput, open(self.FLAGS.output_filename) as foutput:
-                    i += 1
                     for source,target in zip(finput, foutput):
+                        print(i)
+                        if(i >= self.FLAGS.block_size):
+                            break
+                        i += 1
                         yield {
                             'input': self.tokenize_and_map(source)[:self.FLAGS.input_max_length - 1] + [self.END_TOKEN],
                             'output': self.tokenize_and_map(target)[:self.FLAGS.output_max_length - 1] + [self.END_TOKEN]

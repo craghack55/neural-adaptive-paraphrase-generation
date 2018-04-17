@@ -60,7 +60,7 @@ class Seq2seq:
 
         if(mode == tf.contrib.learn.ModeKeys.INFER):
             pred_helper = tf.contrib.seq2seq.GreedyEmbeddingHelper(embeddings, start_tokens=tf.to_int32(start_tokens), end_token=1)
-            pred_outputs = decode(None, mode, 'decode')
+            pred_outputs = decode(pred_helper, mode, 'decode')
             tf.identity(pred_outputs.sample_id[0], name='predict')
             return tf.estimator.EstimatorSpec(mode=mode, predictions=pred_outputs.sample_id)
         else:

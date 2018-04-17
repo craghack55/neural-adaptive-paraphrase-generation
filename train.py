@@ -19,9 +19,9 @@ tf.flags.DEFINE_integer('beam_width'         , 5           , '')
 tf.flags.DEFINE_float('learning_rate'       , 0.001         , 'learning rate for the optimizer')
 tf.flags.DEFINE_string('optimizer'          , 'Adam'        , 'Name of the train source file')
 tf.flags.DEFINE_integer('batch_size'        , 100            , 'random seed for training sampling')
-tf.flags.DEFINE_integer('print_every'       , 1500           , 'print records every n iteration')
-tf.flags.DEFINE_integer('iterations'        , 1500         , 'number of iterations to train')
-tf.flags.DEFINE_integer('block_size'        , 167148         , 'number of blocks to train')
+tf.flags.DEFINE_integer('print_every'       , 1           , 'print records every n iteration')
+tf.flags.DEFINE_integer('iterations'        , 10         , 'number of iterations to train')
+tf.flags.DEFINE_integer('block_size'        , 500         , 'number of blocks to train')
 tf.flags.DEFINE_string('model_dir'          , 'checkpoints' , 'Directory where to save the model')
 
 tf.flags.DEFINE_integer('input_max_length'  , 30            , 'Max length of input sequence to use')
@@ -53,10 +53,11 @@ def main(argv):
             formatter=data.get_formatter(['source', 'target', 'predict']))
 
     estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=FLAGS.model_dir, params=FLAGS)
-    estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=FLAGS.iterations)
+    estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=None)
 
     test_paraphrases = list(estimator.predict(test_fn))
     data.builtTranslationCorpus(test_paraphrases)
+    print(data.translation_corpus)
     print(evaluate(data.reference_corpus, data.translation_corpus))
 
 
