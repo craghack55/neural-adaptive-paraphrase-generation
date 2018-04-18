@@ -36,6 +36,12 @@ tf.flags.DEFINE_string('output_test_filename', 'data/mscoco/test_target.txt', 'N
 tf.flags.DEFINE_string('vocab_filename', 'data/mscoco/train_vocab.txt', 'Name of the vocab file')
 
 
+def saveResult(percentage, score):
+    file = open(str(percentage) + ".txt","w")
+    file.write(str(percentage) + " " + str(score))
+    file.close()
+
+
 # MSCOCO - 167149 data points.
 
 def evaluate(reference_corpus, translation_corpus):
@@ -67,7 +73,9 @@ def trainWithPreviousKnowledge(test_source, test_target, vocabulary):
 
         test_paraphrases = list(estimator.predict(test_fn))
         data.builtTranslationCorpus(test_paraphrases)
-        print(i, evaluate(data.reference_corpus, data.translation_corpus))
+        scr = evaluate(data.reference_corpus, data.translation_corpus)
+        print(i, scr)
+        saveResult(i, scr)
 
 
 # Keep checkpoint folders seperate. Restart training with each different block.
