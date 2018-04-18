@@ -43,15 +43,16 @@ def evaluate(reference_corpus, translation_corpus):
     return bleu
 
 # Restore from checkpoint. Resume training with different dataset.
-def trainWithPreviousKnowledge():
-	percentages = [0.01, 0.05, 0.10, 0.20, 0.40, 0.60, 0.80]
-    checkpoint_filename = 'checkpointsAdaptive'
+def trainWithPreviousKnowledge(test_source, test_target, vocabulary):
+    percentages = [0.05, 0.10, 0.20, 0.40, 0.60, 0.80]
+    checkpoint_filename = "checkpointsAdaptiveWithPrev"
 
     for i in percentages:
-        source_filename = f'data/mscoco/train_source{i}.txt'
-        target_filename = f'data/mscoco/train_target{i}.txt'
-        data = DATA(FLAGS, source_filename, target_filename)
+        source_filename = "data/mscoco/train_source" + format(i, '.2f') + ".txt"
+        target_filename = "data/mscoco/train_target" + format(i, '.2f') + ".txt"
+        data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
         model = Seq2seq(data.vocab_size, FLAGS)
+        iterations = 5
 
         input_fn, feed_fn = data.make_input_fn()
         test_fn = data.make_test_fn()
@@ -59,7 +60,8 @@ def trainWithPreviousKnowledge():
                 formatter=data.get_formatter(['source', 'target', 'predict']))
 
         estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=checkpoint_filename, params=FLAGS)
-        estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=FLAGS.iterations)
+        print("Training with " + format(i, '.2f') + " percent of the dataset.")
+        estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
 
         test_paraphrases = list(estimator.predict(test_fn))
         data.builtTranslationCorpus(test_paraphrases)
@@ -67,15 +69,17 @@ def trainWithPreviousKnowledge():
 
 
 # Keep checkpoint folders seperate. Restart training with each different block.
-def trainWithoutPreviousKnowledge():
-	percentages = [0.01, 0.05, 0.10, 0.20, 0.40, 0.60, 0.80]
+def trainWithoutPreviousKnowledge(test_source, test_target, vocabulary):
+    percentages = [0.05, 0.10, 0.20, 0.40, 0.60, 0.80]
 	
     for i in percentages:
-        source_filename = f'data/mscoco/train_source{i}.txt'
-        target_filename = f'data/mscoco/train_target{i}.txt'
-        checkpoint_filename = f'checkpoints{i}'
-        data = DATA(FLAGS, source_filename, target_filename)
+        print("Training with " + str(i) + " percent of the dataset.")
+        source_filename = "data/mscoco/train_source" + format(i, '.2f') + ".txt"
+        target_filename = "data/mscoco/train_target" + format(i, '.2f') + ".txt"
+        checkpoint_filename = "checkpoints" + format(i, '.2f')
+        data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
         model = Seq2seq(data.vocab_size, FLAGS)
+        iterations = 5
 
         input_fn, feed_fn = data.make_input_fn()
         test_fn = data.make_test_fn()
@@ -83,7 +87,8 @@ def trainWithoutPreviousKnowledge():
                 formatter=data.get_formatter(['source', 'target', 'predict']))
 
         estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=checkpoint_filename, params=FLAGS)
-        estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=FLAGS.iterations)
+        print("Training with " + format(i, '.2f') + " percent of the dataset.")
+        estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
 
         test_paraphrases = list(estimator.predict(test_fn))
         data.builtTranslationCorpus(test_paraphrases)
@@ -92,19 +97,21 @@ def trainWithoutPreviousKnowledge():
 # Train with Quora. Restore from the checkpoint. Start training with MSCOCO.
 def trainWithTransferLearning(sourceDataset, transferMethod):
 
-    mscoco_train_source = f'data/{sourceDataset}/train_source.txt'
-    mscoco_train_target = f'data/{sourceDataset}/train_target.txt'
+    mscoco_train_source = "data/" + sourceDataset + "/train_source.txt"
+    mscoco_train_target = "data/" + sourceDataset + "/train_target.txt"
+    mscoco_vocabulary = "data/" + sourceDataset + "/train_vocab.txt"
     quora_train_source = 'data/quora/train_source.txt'
-    quoara_train_target = 'data/quora/train_target.txt'
+    quora_train_target = 'data/quora/train_target.txt'
     quora_test_source = 'data/quora/test_source.txt'
-    quoara_test_target = 'data/quora/test_target.txt'
-    sourceDatasetIterations = 10
-    targetDatasetIterations = 10
+    quora_test_target = 'data/quora/test_target.txt'
+    quora_vocabulary = 'data/quora/test_target.txt'
+    sourceDatasetIterations = 5
+    targetDatasetIterations = 5
     model_directory = "checkpointsTransfer"
 
 
     # Train with MSCOCO dataset first  
-    data  = Data(FLAGS, mscoco_train_source, mscoco_train_target)
+    data  = Data(FLAGS, mscoco_train_source, mscoco_train_target, FLAGS.input_test_filename, FLAGS.output_test_filename, mscoco_vocabulary)
     model = Seq2seq(data.vocab_size, FLAGS)
 
     input_fn, feed_fn = data.make_input_fn()
@@ -115,8 +122,7 @@ def trainWithTransferLearning(sourceDataset, transferMethod):
     estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=sourceDatasetIterations)
 
     # Load the model trained on MSCOCO and use it on Quora dataset.
-    data = Data(FLAGS, quora_train_source, quora_train_target)
-
+    data  = Data(FLAGS, quora_train_source, quora_train_target, quora_test_source, quora_test_target, quora_vocabulary)
 
     input_fn, feed_fn = data.make_input_fn()
     test_fn = data.make_test_fn()
@@ -135,7 +141,7 @@ def trainWithActiveLearning(samplingMethod):
 	print("")
 
 def supervisedLearning(train_source, train_target, test_source, test_target):
-    data  = Data(FLAGS, train_source, train_target)
+    data  = Data(FLAGS, train_source, train_target, test_source, test_target)
     model = Seq2seq(data.vocab_size, FLAGS)
 
     input_fn, feed_fn = data.make_input_fn()
@@ -143,7 +149,7 @@ def supervisedLearning(train_source, train_target, test_source, test_target):
     print_inputs = tf.train.LoggingTensorHook(['source', 'target', 'predict'], every_n_iter=FLAGS.print_every,
             formatter=data.get_formatter(['source', 'target', 'predict']))
 
-    estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=checkpointsTransfer, params=FLAGS)
+    estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=FLAGS.model_dir, params=FLAGS)
     estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=sourceDatasetIterations)
 
     test_paraphrases = list(estimator.predict(test_fn))
@@ -154,6 +160,16 @@ def supervisedLearning(train_source, train_target, test_source, test_target):
 
 def main(argv):
     tf.logging._logger.setLevel(logging.INFO)
+
+    train_source = 'data/mscoco/train_source.txt'
+    train_target = 'data/mscoco/train_target.txt'
+    test_source = 'data/mscoco/test_source.txt'
+    test_target = 'data/mscoco/test_target.txt'
+    vocab = 'data/mscoco/train_vocab.txt'
+
+
+    # trainWithPreviousKnowledge(test_source, test_target, vocab)
+    trainWithoutPreviousKnowledge(test_source, test_target, vocab)
 
 
 if __name__ == "__main__":

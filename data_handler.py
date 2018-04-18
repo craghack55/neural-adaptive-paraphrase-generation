@@ -2,14 +2,20 @@ import tensorflow as tf
 import numpy as np
 
 class Data:
-    def __init__(self, FLAGS):
+    def __init__(self, FLAGS, train_source, train_target, test_source, test_target, vocabulary):
         self.FLAGS = FLAGS
+        self.train_source = train_source
+        self.train_target = train_target
+        self.test_source = test_source
+        self.test_target = test_target
+
+
         # create vocab and reverse vocab maps
         self.vocab     = {}
         self.rev_vocab = {}
         self.END_TOKEN = 1 
         self.UNK_TOKEN = 2
-        with open(FLAGS.vocab_filename) as f:
+        with open(vocabulary) as f:
             for idx, line in enumerate(f):
                 self.vocab[line.strip()] = idx
                 self.rev_vocab[idx] = line.strip()
@@ -37,7 +43,7 @@ class Data:
 
         def sampler():
             while True:
-                with open(self.FLAGS.input_test_filename) as finput, open(self.FLAGS.output_test_filename) as foutput:
+                with open(self.test_source) as finput, open(self.test_target) as foutput:
                     for source,target in zip(finput, foutput):
                         self.reference_corpus.append(target.rstrip())     
                         yield {
@@ -81,7 +87,7 @@ class Data:
 
         def sampler():
             while True:
-                with open(self.FLAGS.input_filename) as finput, open(self.FLAGS.output_filename) as foutput:
+                with open(self.train_source) as finput, open(self.train_target) as foutput:
                     for source,target in zip(finput, foutput):
                         yield {
                             'input': self.tokenize_and_map(source)[:self.FLAGS.input_max_length - 1] + [self.END_TOKEN],
