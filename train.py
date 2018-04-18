@@ -18,9 +18,9 @@ tf.flags.DEFINE_integer('beam_width'         , 5           , '')
 # Training related
 tf.flags.DEFINE_float('learning_rate'       , 0.001         , 'learning rate for the optimizer')
 tf.flags.DEFINE_string('optimizer'          , 'Adam'        , 'Name of the train source file')
-tf.flags.DEFINE_integer('batch_size'        , 100            , 'random seed for training sampling')
+tf.flags.DEFINE_integer('batch_size'        , 50            , 'random seed for training sampling')
 tf.flags.DEFINE_integer('print_every' , 1000 				, 	'print records every n iteration') 
-tf.flags.DEFINE_integer('iterations' , 16715 				, 'number of iterations to train')
+tf.flags.DEFINE_integer('iterations' , 10000 				, 'number of iterations to train')
 tf.flags.DEFINE_string('model_dir'          		, 'checkpoints' , 'Directory where to save the model')
 
 tf.flags.DEFINE_integer('input_max_length'  , 30            , 'Max length of input sequence to use')
@@ -29,7 +29,7 @@ tf.flags.DEFINE_integer('output_max_length' , 30            , 'Max length of out
 tf.flags.DEFINE_bool('use_residual_lstm'    , True          , 'To use the residual connection with the residual LSTM')
 
 # Data related
-tf.flags.DEFINE_string('input_filename', 'data/mscoco/target1.txt', 'Name of the train source file')
+tf.flags.DEFINE_string('input_filename', 'data/mscoco/train_source.txt', 'Name of the train source file')
 tf.flags.DEFINE_string('output_filename', 'data/mscoco/train_target.txt', 'Name of the train target file')
 tf.flags.DEFINE_string('input_test_filename', 'data/mscoco/test_source.txt', 'Name of the train source file')
 tf.flags.DEFINE_string('output_test_filename', 'data/mscoco/test_target.txt', 'Name of the train target file')
@@ -44,10 +44,12 @@ def evaluate(reference_corpus, translation_corpus):
 
 # Restore from checkpoint. Resume training with different dataset.
 def trainWithPreviousKnowledge():
+	percentages = [0.01, 0.05, 0.10, 0.20, 0.40, 0.60, 0.80]
 	print("")
 
 # Keep checkpoint folders seperate. Restart training with each different block.
 def trainWithoutPreviousKnowledge():
+	percentages = [0.01, 0.05, 0.10, 0.20, 0.40, 0.60, 0.80]
 	print("")
 
 # Train with Quora. Restore from the checkpoint. Start training with MSCOCO.
