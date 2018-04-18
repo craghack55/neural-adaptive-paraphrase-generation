@@ -46,13 +46,15 @@ def evaluate(reference_corpus, translation_corpus):
 def trainWithPreviousKnowledge(test_source, test_target, vocabulary):
     percentages = [0.05, 0.10, 0.20, 0.40, 0.60, 0.80]
     checkpoint_filename = "checkpointsAdaptiveWithPrev"
+    size = 167479
+    epoch = 3
 
     for i in percentages:
         source_filename = "data/mscoco/train_source" + format(i, '.2f') + ".txt"
         target_filename = "data/mscoco/train_target" + format(i, '.2f') + ".txt"
         data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
         model = Seq2seq(data.vocab_size, FLAGS)
-        iterations = 5
+        iterations = int(round(size * i * epoch / FLAGS.batch_size))
 
         input_fn, feed_fn = data.make_input_fn()
         test_fn = data.make_test_fn()
@@ -79,7 +81,7 @@ def trainWithoutPreviousKnowledge(test_source, test_target, vocabulary):
         checkpoint_filename = "checkpoints" + format(i, '.2f')
         data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
         model = Seq2seq(data.vocab_size, FLAGS)
-        iterations = 5
+        iterations = int(round(size * i * epoch / FLAGS.batch_size))
 
         input_fn, feed_fn = data.make_input_fn()
         test_fn = data.make_test_fn()
@@ -169,10 +171,10 @@ def main(argv):
     vocab = 'data/quora/train_vocab.txt'
 
 
-    # trainWithPreviousKnowledge(test_source, test_target, vocab)
+    trainWithPreviousKnowledge(test_source, test_target, vocab)
     # trainWithoutPreviousKnowledge(test_source, test_target, vocab)
     # trainWithTransferLearning("mscoco", "")
-    supervisedLearning(train_source, train_target, test_source, test_target, vocab)
+    # supervisedLearning(train_source, train_target, test_source, test_target, vocab)
 
 
 if __name__ == "__main__":
