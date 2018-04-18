@@ -1,31 +1,20 @@
+import nltk
+from nltk import word_tokenize
 
-def recordVocabulary(destination):
-	print("sadsdfsd")
+def buildVocabulary(source_file):
+	source = open(source_file).read()
 
-def buildVocabulary(source_file, target_file):
-	vocab = []
+	tokens = word_tokenize(source.decode('utf-8'))
+	for i in range (0, len(tokens)):
+		tokens[i] = tokens[i].lower()
 
-	with open(source_file) as finput, open(target_file) as foutput:
-		for source,target in zip(finput, foutput):
-			for i in source.split(" "):
+	set_tokes = set(tokens)
+	tokens = list(set_tokes)
+	file = open("train_vocab.txt","w") 
+	for i in tokens:
+		file.write(i.encode('utf-8') + '\n')
 
-				s = i.replace("?", "")
-				s = s.replace(".", "")
-				s = s.replace("!", "")
-				s = s.replace("\n", "")
-
-				if(s not in vocab): vocab.append(s)
-
-			for i in target.split(" "):
-
-				s = i.replace("?", "")
-				s = s.replace(".", "")
-				s = s.replace("!", "")
-				s = s.replace("\n", "")
-
-				if(s not in vocab): vocab.append(s)
-
-	print(vocab)
+	file.close()
 
 if __name__ == "__main__":
-	buildVocabulary("data/quora/train_source.txt", "data/quora/train_target.txt")
+	buildVocabulary("data/quora/all.txt")

@@ -94,7 +94,7 @@ def trainWithoutPreviousKnowledge(test_source, test_target, vocabulary):
         data.builtTranslationCorpus(test_paraphrases)
         print(i, evaluate(data.reference_corpus, data.translation_corpus))
 
-# Train with Quora. Restore from the checkpoint. Start training with MSCOCO.
+# Train with MSCOCO. Restore from the checkpoint. Start training with Quora.
 def trainWithTransferLearning(sourceDataset, transferMethod):
 
     mscoco_train_source = "data/" + sourceDataset + "/train_source.txt"
@@ -104,9 +104,9 @@ def trainWithTransferLearning(sourceDataset, transferMethod):
     quora_train_target = 'data/quora/train_target.txt'
     quora_test_source = 'data/quora/test_source.txt'
     quora_test_target = 'data/quora/test_target.txt'
-    quora_vocabulary = 'data/quora/test_target.txt'
-    sourceDatasetIterations = 5
-    targetDatasetIterations = 5
+    quora_vocabulary = 'data/quora/train_vocab.txt'
+    sourceDatasetIterations = 1
+    targetDatasetIterations = 1
     model_directory = "checkpointsTransfer"
 
 
@@ -140,9 +140,10 @@ def trainWithTransferLearning(sourceDataset, transferMethod):
 def trainWithActiveLearning(samplingMethod):
 	print("")
 
-def supervisedLearning(train_source, train_target, test_source, test_target):
-    data  = Data(FLAGS, train_source, train_target, test_source, test_target)
+def supervisedLearning(train_source, train_target, test_source, test_target, vocabulary):
+    data  = Data(FLAGS, train_source, train_target, test_source, test_target, vocabulary)
     model = Seq2seq(data.vocab_size, FLAGS)
+    iterations = 2
 
     input_fn, feed_fn = data.make_input_fn()
     test_fn = data.make_test_fn()
@@ -150,7 +151,7 @@ def supervisedLearning(train_source, train_target, test_source, test_target):
             formatter=data.get_formatter(['source', 'target', 'predict']))
 
     estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=FLAGS.model_dir, params=FLAGS)
-    estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=sourceDatasetIterations)
+    estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
 
     test_paraphrases = list(estimator.predict(test_fn))
     data.builtTranslationCorpus(test_paraphrases)
@@ -161,15 +162,17 @@ def supervisedLearning(train_source, train_target, test_source, test_target):
 def main(argv):
     tf.logging._logger.setLevel(logging.INFO)
 
-    train_source = 'data/mscoco/train_source.txt'
-    train_target = 'data/mscoco/train_target.txt'
-    test_source = 'data/mscoco/test_source.txt'
-    test_target = 'data/mscoco/test_target.txt'
-    vocab = 'data/mscoco/train_vocab.txt'
+    train_source = 'data/quora/train_source.txt'
+    train_target = 'data/quora/train_target.txt'
+    test_source = 'data/quora/test_source.txt'
+    test_target = 'data/quora/test_target.txt'
+    vocab = 'data/quora/train_vocab.txt'
 
 
     # trainWithPreviousKnowledge(test_source, test_target, vocab)
-    trainWithoutPreviousKnowledge(test_source, test_target, vocab)
+    # trainWithoutPreviousKnowledge(test_source, test_target, vocab)
+    # trainWithTransferLearning("mscoco", "")
+    supervisedLearning(train_source, train_target, test_source, test_target, vocab)
 
 
 if __name__ == "__main__":
