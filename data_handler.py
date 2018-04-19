@@ -50,7 +50,7 @@ class Data:
             while True:
                 with open(self.test_source) as finput, open(self.test_target) as foutput:
                     for source,target in zip(finput, foutput):
-                        self.reference_corpus.append(target.rstrip())     
+                        self.reference_corpus.append(target.rstrip().split(" "))     
                         yield {
                             'input': self.tokenize_and_map(source)[:self.FLAGS.input_max_length - 1] + [self.END_TOKEN],
                             'output': self.tokenize_and_map(target)[:self.FLAGS.output_max_length - 1] + [self.END_TOKEN]

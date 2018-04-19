@@ -170,7 +170,8 @@ def supervisedLearning(train_source, train_target, test_source, test_target, voc
     test_paraphrases = list(estimator.predict(test_fn))
 
     data.builtTranslationCorpus(test_paraphrases)
-    print(data.translation_corpus)
+    print(data.reference_corpus)
+    # print(data.translation_corpus)
     print(evaluate(data.reference_corpus, data.translation_corpus))
 
 
