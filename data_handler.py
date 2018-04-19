@@ -30,8 +30,13 @@ class Data:
         for token in translations:
             sentence = []
             for t in token:
-                sentence.append(self.rev_vocab[t])
-            corpus.append(' '.join(sentence).replace('</S>','').replace('<S>', ''))
+                s = self.rev_vocab[t]
+                if(s != ' ' and s != '.' and s != ',' and s != '</S>' and s != '<S>'):
+                    sentence.append(s)
+
+            # corpus.append(' '.join(sentence).replace('</S>','').replace('<S>', ''))
+            corpus.append(sentence)
+
 
         self.translation_corpus = corpus
 

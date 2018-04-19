@@ -81,6 +81,8 @@ def trainWithPreviousKnowledge(test_source, test_target, vocabulary):
 # Keep checkpoint folders seperate. Restart training with each different block.
 def trainWithoutPreviousKnowledge(test_source, test_target, vocabulary):
     percentages = [0.05, 0.10, 0.20, 0.40, 0.60, 0.80]
+    size = 167479
+    epoch = 3
 	
     for i in percentages:
         print("Training with " + str(i) + " percent of the dataset.")
@@ -102,7 +104,9 @@ def trainWithoutPreviousKnowledge(test_source, test_target, vocabulary):
 
         test_paraphrases = list(estimator.predict(test_fn))
         data.builtTranslationCorpus(test_paraphrases)
-        print(i, evaluate(data.reference_corpus, data.translation_corpus))
+        scr = evaluate(data.reference_corpus, data.translation_corpus)
+        print(i, scr)
+        saveResult(i, scr)
 
 # Train with MSCOCO. Restore from the checkpoint. Start training with Quora.
 def trainWithTransferLearning(sourceDataset, transferMethod):
@@ -153,7 +157,7 @@ def trainWithActiveLearning(samplingMethod):
 def supervisedLearning(train_source, train_target, test_source, test_target, vocabulary):
     data  = Data(FLAGS, train_source, train_target, test_source, test_target, vocabulary)
     model = Seq2seq(data.vocab_size, FLAGS)
-    iterations = 2
+    iterations = 1
 
     input_fn, feed_fn = data.make_input_fn()
     test_fn = data.make_test_fn()
@@ -164,6 +168,7 @@ def supervisedLearning(train_source, train_target, test_source, test_target, voc
     estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
 
     test_paraphrases = list(estimator.predict(test_fn))
+
     data.builtTranslationCorpus(test_paraphrases)
     print(data.translation_corpus)
     print(evaluate(data.reference_corpus, data.translation_corpus))
@@ -172,11 +177,11 @@ def supervisedLearning(train_source, train_target, test_source, test_target, voc
 def main(argv):
     tf.logging._logger.setLevel(logging.INFO)
 
-    train_source = 'data/quora/train_source.txt'
-    train_target = 'data/quora/train_target.txt'
-    test_source = 'data/quora/test_source.txt'
-    test_target = 'data/quora/test_target.txt'
-    vocab = 'data/quora/train_vocab.txt'
+    train_source = 'data/mscoco/train_source.txt'
+    train_target = 'data/mscoco/train_target.txt'
+    test_source = 'data/mscoco/test_source.txt'
+    test_target = 'data/mscoco/test_target.txt'
+    vocab = 'data/mscoco/train_vocab.txt'
 
 
     trainWithPreviousKnowledge(test_source, test_target, vocab)

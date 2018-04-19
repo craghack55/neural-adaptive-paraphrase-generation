@@ -1,5 +1,13 @@
 import nltk
 from nltk import word_tokenize
+from tensor2tensor.utils import bleu_hook
+
+def testBLEU():
+	translation_corpus = [['how', 'do', 'i', 'learn', 'linux']]
+	reference_corpus = [['how', 'do', 'i', 'learn' ,'networking', 'with', 'linux']]
+	bleu = bleu_hook.compute_bleu(reference_corpus, translation_corpus)
+	print(bleu)
+
 
 def buildVocabulary(source_file):
 	source = open(source_file).read()
@@ -17,4 +25,5 @@ def buildVocabulary(source_file):
 	file.close()
 
 if __name__ == "__main__":
-	buildVocabulary("data/quora/all.txt")
+	# buildVocabulary("data/quora/all.txt")
+	testBLEU()

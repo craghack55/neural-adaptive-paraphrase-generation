@@ -1,3 +1,5 @@
 data/
 checkpoints/
 checkpointsPPDB/
+checkpointsAdaptiveWithPrev/
+checkpointsTransfer/
