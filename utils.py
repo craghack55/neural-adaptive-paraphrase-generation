@@ -9,21 +9,23 @@ def testBLEU():
 	print(bleu)
 
 
-def buildVocabulary(source_file):
-	source = open(source_file).read()
+def buildVocabulary(source_files, output_filename):
+	for source_file in source_files:
+		source = open(source_file).read()
 
-	tokens = word_tokenize(source.decode('utf-8'))
-	for i in range (0, len(tokens)):
-		tokens[i] = tokens[i].lower()
+		tokens = word_tokenize(source.decode('utf-8'))
+		for i in range (0, len(tokens)):
+			tokens[i] = tokens[i].lower()
 
 	set_tokes = set(tokens)
 	tokens = list(set_tokes)
-	file = open("train_vocab.txt","w") 
+	file = open(output_filename,"w") 
 	for i in tokens:
 		file.write(i.encode('utf-8') + '\n')
 
 	file.close()
 
 if __name__ == "__main__":
-	# buildVocabulary("data/quora/all.txt")
+	source_files = ("data/quora/all.txt", "data/mscoco/all.txt")
+	buildVocabulary(source_files, "transfer_vocab.txt")
 	testBLEU()

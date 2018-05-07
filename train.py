@@ -119,24 +119,25 @@ def trainWithTransferLearning(sourceDataset, transferMethod):
     quora_test_source = 'data/quora/test_source.txt'
     quora_test_target = 'data/quora/test_target.txt'
     quora_vocabulary = 'data/quora/train_vocab.txt'
-    sourceDatasetIterations = 1
-    targetDatasetIterations = 1
+    sourceDatasetIterations = 5
+    targetDatasetIterations = 5
     model_directory = "checkpointsTransfer"
+    transfer_vocabulary = "transfer_vocab.txt"
 
 
     # Train with MSCOCO dataset first  
-    data  = Data(FLAGS, mscoco_train_source, mscoco_train_target, FLAGS.input_test_filename, FLAGS.output_test_filename, mscoco_vocabulary)
+    data  = Data(FLAGS, mscoco_train_source, mscoco_train_target, FLAGS.input_test_filename, FLAGS.output_test_filename, transfer_vocabulary)
     model = Seq2seq(data.vocab_size, FLAGS)
 
     input_fn, feed_fn = data.make_input_fn()
     print_inputs = tf.train.LoggingTensorHook(['source', 'target', 'predict'], every_n_iter=FLAGS.print_every,
             formatter=data.get_formatter(['source', 'target', 'predict']))
 
-    estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=checkpointsTransfer, params=FLAGS)
+    estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=model_directory, params=FLAGS)
     estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=sourceDatasetIterations)
 
     # Load the model trained on MSCOCO and use it on Quora dataset.
-    data  = Data(FLAGS, quora_train_source, quora_train_target, quora_test_source, quora_test_target, quora_vocabulary)
+    data  = Data(FLAGS, quora_train_source, quora_train_target, quora_test_source, quora_test_target, transfer_vocabulary)
 
     input_fn, feed_fn = data.make_input_fn()
     test_fn = data.make_test_fn()
@@ -157,7 +158,10 @@ def trainWithActiveLearning(samplingMethod):
 def supervisedLearning(train_source, train_target, test_source, test_target, vocabulary):
     data  = Data(FLAGS, train_source, train_target, test_source, test_target, vocabulary)
     model = Seq2seq(data.vocab_size, FLAGS)
-    iterations = 1
+    size = 167479
+    epoch = 3
+    iterations = int(round(size * epoch / FLAGS.batch_size))
+
 
     input_fn, feed_fn = data.make_input_fn()
     test_fn = data.make_test_fn()
@@ -185,9 +189,9 @@ def main(argv):
     vocab = 'data/mscoco/train_vocab.txt'
 
 
-    trainWithPreviousKnowledge(test_source, test_target, vocab)
+    # trainWithPreviousKnowledge(test_source, test_target, vocab)
     # trainWithoutPreviousKnowledge(test_source, test_target, vocab)
-    # trainWithTransferLearning("mscoco", "")
+    trainWithTransferLearning("mscoco", "")
     # supervisedLearning(train_source, train_target, test_source, test_target, vocab)
 
 
