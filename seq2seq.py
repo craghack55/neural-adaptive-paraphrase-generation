@@ -21,9 +21,19 @@ class Seq2seq:
         with tf.variable_scope('embed', reuse=True):
             embeddings = tf.get_variable('embeddings')
         cell = tf.contrib.rnn.LSTMCell(num_units=num_units)
+        cell2 = tf.contrib.rnn.LSTMCell(num_units=num_units)
+
         if self.FLAGS.use_residual_lstm:
             cell = tf.contrib.rnn.ResidualWrapper(cell)
-        encoder_outputs, encoder_final_state = tf.nn.dynamic_rnn(cell, input_embed, dtype=tf.float32)
+            cell2 = tf.contrib.rnn.ResidualWrapper(cell2)
+
+        cells = [cell, cell2]
+
+
+        multi_rnn_cell = tf.nn.rnn_cell.MultiRNNCell(cells)
+
+        encoder_outputs, encoder_final_state = tf.nn.dynamic_rnn(multi_rnn_cell, input_embed, dtype=tf.float32)
+        # encoder_outputs, encoder_final_state = tf.nn.dynamic_rnn(cell, input_embed, dtype=tf.float32)
 
 
         def decode(helper, mode, scope, reuse=None):
@@ -33,19 +43,17 @@ class Seq2seq:
                     num_units=num_units, memory=encoder_outputs,
                     memory_sequence_length=input_lengths)
                 cell = tf.contrib.rnn.LSTMCell(num_units=num_units)
-                attn_cell = tf.contrib.seq2seq.AttentionWrapper(cell, attention_mechanism, attention_layer_size=num_units / 2)
-                out_cell = tf.contrib.rnn.OutputProjectionWrapper(attn_cell, self.vocab_size, reuse=reuse)
-                # Beam Search comes here.
+                # cell2 = tf.contrib.rnn.LSTMCell(num_units=num_units)
 
-                # if(mode == tf.contrib.learn.ModeKeys.INFER):
-                #     my_decoder = tf.contrib.seq2seq.BeamSearchDecoder(cell=out_cell, embedding=embeddings, start_tokens=tf.to_int32(start_tokens),
-                #                                                         end_token=1, initial_state=out_cell.zero_state(dtype=tf.float32, batch_size=batch_size), 
-                #                                                         beam_width=FLAGS.beam_width, output_layer=self.output_layer, length_penalty_weight=FLAGS.length_penalty_weight)
-                # else:
-                #     decoder = tf.contrib.seq2seq.BasicDecoder(
-                #         cell=out_cell, helper=helper,
-                #         initial_state=out_cell.zero_state(
-                #             dtype=tf.float32, batch_size=batch_size))
+                # cells = [cell, cell2]
+
+
+                # multi_rnn_cell = tf.nn.rnn_cell.MultiRNNCell(cells)
+
+                # attn_cell = tf.contrib.seq2seq.AttentionWrapper(multi_rnn_cell, attention_mechanism, attention_layer_size=num_units / 2)
+                attn_cell = tf.contrib.seq2seq.AttentionWrapper(cell, attention_mechanism, attention_layer_size=num_units / 2)
+
+                out_cell = tf.contrib.rnn.OutputProjectionWrapper(attn_cell, self.vocab_size, reuse=reuse)
 
                 decoder = tf.contrib.seq2seq.BasicDecoder(
                     cell=out_cell, helper=helper,
@@ -62,6 +70,7 @@ class Seq2seq:
             pred_helper = tf.contrib.seq2seq.GreedyEmbeddingHelper(embeddings, start_tokens=tf.to_int32(start_tokens), end_token=1)
             pred_outputs = decode(pred_helper, mode, 'decode')
             tf.identity(pred_outputs.sample_id[0], name='predict')
+
             return tf.estimator.EstimatorSpec(mode=mode, predictions=pred_outputs.sample_id)
         else:
             train_helper = tf.contrib.seq2seq.TrainingHelper(output_embed, output_lengths)
@@ -72,11 +81,16 @@ class Seq2seq:
             tf.identity(train_outputs.sample_id[0], name='train_pred')
             weights = tf.to_float(tf.not_equal(train_output[:, :-1], 1))
             loss = tf.contrib.seq2seq.sequence_loss(train_outputs.rnn_output, output, weights=weights)
+
+            tvars = tf.trainable_variables()
+            train_vars = [var for var in tvars if var.name.startswith('decode')]
+
             train_op = layers.optimize_loss(
                 loss, tf.train.get_global_step(),
                 optimizer=params.optimizer,
                 learning_rate=params.learning_rate,
-                summaries=['loss', 'learning_rate'])
+                summaries=['loss', 'learning_rate'],
+                variables = train_vars)
 
             tf.identity(pred_outputs.sample_id[0], name='predict')
             return tf.estimator.EstimatorSpec(mode=mode, predictions=pred_outputs.sample_id, loss=loss, train_op=train_op)

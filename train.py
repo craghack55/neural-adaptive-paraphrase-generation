@@ -158,9 +158,10 @@ def trainWithActiveLearning(samplingMethod):
 def supervisedLearning(train_source, train_target, test_source, test_target, vocabulary):
     data  = Data(FLAGS, train_source, train_target, test_source, test_target, vocabulary)
     model = Seq2seq(data.vocab_size, FLAGS)
-    size = 167479
-    epoch = 3
-    iterations = int(round(size * epoch / FLAGS.batch_size))
+    size = 119446
+    epoch = 10
+    # iterations = int(round(size * epoch / FLAGS.batch_size))
+    iterations = 5
 
 
     input_fn, feed_fn = data.make_input_fn()
@@ -168,13 +169,13 @@ def supervisedLearning(train_source, train_target, test_source, test_target, voc
     print_inputs = tf.train.LoggingTensorHook(['source', 'target', 'predict'], every_n_iter=FLAGS.print_every,
             formatter=data.get_formatter(['source', 'target', 'predict']))
 
-    estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=FLAGS.model_dir, params=FLAGS)
+    estimator = tf.estimator.Estimator(model_fn = model.make_graph, model_dir=FLAGS.model_dir, params=FLAGS)
     estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
 
     test_paraphrases = list(estimator.predict(test_fn))
 
     data.builtTranslationCorpus(test_paraphrases)
-    print(data.reference_corpus)
+    # print(data.reference_corpus)
     # print(data.translation_corpus)
     print(evaluate(data.reference_corpus, data.translation_corpus))
 
@@ -182,17 +183,17 @@ def supervisedLearning(train_source, train_target, test_source, test_target, voc
 def main(argv):
     tf.logging._logger.setLevel(logging.INFO)
 
-    train_source = 'data/mscoco/train_source.txt'
-    train_target = 'data/mscoco/train_target.txt'
-    test_source = 'data/mscoco/test_source.txt'
-    test_target = 'data/mscoco/test_target.txt'
-    vocab = 'data/mscoco/train_vocab.txt'
+    train_source = 'data/quora/train_source.txt'
+    train_target = 'data/quora/train_target.txt'
+    test_source = 'data/quora/test_source.txt'
+    test_target = 'data/quora/test_target.txt'
+    vocab = 'data/quora/train_vocab.txt'
 
 
     # trainWithPreviousKnowledge(test_source, test_target, vocab)
     # trainWithoutPreviousKnowledge(test_source, test_target, vocab)
-    trainWithTransferLearning("mscoco", "")
-    # supervisedLearning(train_source, train_target, test_source, test_target, vocab)
+    # trainWithTransferLearning("mscoco", "")
+    supervisedLearning(train_source, train_target, test_source, test_target, vocab)
 
 
 if __name__ == "__main__":
