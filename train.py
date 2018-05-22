@@ -199,7 +199,7 @@ def supervisedLearning(datasetPath, datasetSize, transferMethod = None, transfer
     data  = Data(FLAGS, train_source, train_target, test_source, test_target, vocabulary)
     model = Seq2seq(data.vocab_size, FLAGS, transferMethod, sourceCheckpointPath)
     size = datasetSize
-    epoch = 10
+    epoch = 5
     iterations = int(round(size * epoch / FLAGS.batch_size))
     # iterations = 1
 
@@ -227,7 +227,7 @@ def supervisedLearning(datasetPath, datasetSize, transferMethod = None, transfer
 def main(argv):
     tf.logging._logger.setLevel(logging.INFO)
 
-    datasetPath = 'data/msr/'
+    datasetPath = 'data/quora/'
     # datasetPath = 'data/quora/'
     # datasetPath = 'data/ppdb-lexical/'
     msrSize = 2753
@@ -246,7 +246,7 @@ def main(argv):
     # trainWithPreviousKnowledgePool(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
     # trainWithoutPreviousKnowledge(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
     # supervisedLearning(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
-    supervisedLearning(datasetPath, msrSize)
+    supervisedLearning(datasetPath, quoraSize)
 
 
 if __name__ == "__main__":
