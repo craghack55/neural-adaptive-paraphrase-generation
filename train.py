@@ -72,8 +72,8 @@ def trainWithPreviousKnowledge(datasetPath, datasetSize, transferMethod = None, 
         source_filename = datasetPath + format(i, '.1f') + "_source" + ".txt"
         target_filename = datasetPath + format(i, '.1f') + "_target" + ".txt"
         data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
-        # iterations = int(round(size * i * epoch / FLAGS.batch_size))
-        iterations = 1
+        iterations = int(round(size * i * epoch / FLAGS.batch_size))
+        # iterations = 1
 
         input_fn, feed_fn = data.make_input_fn()
         test_fn = data.make_test_fn()
@@ -115,8 +115,8 @@ def trainWithPreviousKnowledgePool(datasetPath, datasetSize, transferMethod = No
         source_filename = datasetPath + format(i, '.1f') + "_pool_source" + ".txt"
         target_filename = datasetPath + format(i, '.1f') + "_pool_target" + ".txt"
         data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
-        # iterations = int(round(size * i * epoch / FLAGS.batch_size))
-        iterations = 1
+        iterations = int(round(size * i * epoch / FLAGS.batch_size))
+        # iterations = 1
 
         input_fn, feed_fn = data.make_input_fn()
         test_fn = data.make_test_fn()
@@ -158,8 +158,8 @@ def trainWithoutPreviousKnowledge(datasetPath, datasetSize, transferMethod = Non
         checkpoint_filename = "checkpointsWithoutPrev" + format(i, '.1f') + suffix
         data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
         model = Seq2seq(data.vocab_size, FLAGS, transferMethod, sourceCheckpointPath)
-        # iterations = int(round(size * i * epoch / FLAGS.batch_size))
-        iterations = 1
+        iterations = int(round(size * i * epoch / FLAGS.batch_size))
+        # iterations = 1
 
         input_fn, feed_fn = data.make_input_fn()
         test_fn = data.make_test_fn()
@@ -200,8 +200,8 @@ def supervisedLearning(datasetPath, datasetSize, transferMethod = None, transfer
     model = Seq2seq(data.vocab_size, FLAGS, transferMethod, sourceCheckpointPath)
     size = datasetSize
     epoch = 10
-    # iterations = int(round(size * epoch / FLAGS.batch_size))
-    iterations = 1
+    iterations = int(round(size * epoch / FLAGS.batch_size))
+    # iterations = 1
 
     # var_list = checkpoint_utils.list_variables('checkpoints')
     # for v in var_list: print(v)
