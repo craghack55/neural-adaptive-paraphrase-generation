@@ -5,15 +5,17 @@ import tensorflow as tf
 from seq2seq import Seq2seq
 from data_handler import Data
 from tensor2tensor.utils import bleu_hook
+from tensorflow.contrib.framework.python.framework import checkpoint_utils
+
 
 FLAGS = tf.flags.FLAGS
 
 # Model related
-tf.flags.DEFINE_integer('num_units'         , 256           , 'Number of units in a LSTM cell')
-tf.flags.DEFINE_integer('embed_dim'         , 256           , 'Size of the embedding vector')
+tf.flags.DEFINE_integer('num_units'         , 512           , 'Number of units in a LSTM cell')
+tf.flags.DEFINE_integer('embed_dim'         , 512           , 'Size of the embedding vector')
 tf.flags.DEFINE_integer('length_penalty_weight'         , 0           , '')
 tf.flags.DEFINE_integer('beam_width'         , 5           , '')
-
+tf.flags.DEFINE_float('drop_prob'         , 0.5           , '')
 
 # Training related
 tf.flags.DEFINE_float('learning_rate'       , 0.001         , 'learning rate for the optimizer')
@@ -23,8 +25,8 @@ tf.flags.DEFINE_integer('print_every' , 1000 				, 	'print records every n itera
 tf.flags.DEFINE_integer('iterations' , 10000 				, 'number of iterations to train')
 tf.flags.DEFINE_string('model_dir'          		, 'checkpoints' , 'Directory where to save the model')
 
-tf.flags.DEFINE_integer('input_max_length'  , 30            , 'Max length of input sequence to use')
-tf.flags.DEFINE_integer('output_max_length' , 30            , 'Max length of output sequence to use')
+tf.flags.DEFINE_integer('input_max_length'  , 100            , 'Max length of input sequence to use')
+tf.flags.DEFINE_integer('output_max_length' , 100            , 'Max length of output sequence to use')
 
 tf.flags.DEFINE_bool('use_residual_lstm'    , True          , 'To use the residual connection with the residual LSTM')
 
@@ -36,8 +38,8 @@ tf.flags.DEFINE_string('output_test_filename', 'data/mscoco/test_target.txt', 'N
 tf.flags.DEFINE_string('vocab_filename', 'data/mscoco/train_vocab.txt', 'Name of the vocab file')
 
 
-def saveResult(percentage, score):
-    file = open(str(percentage) + ".txt","w")
+def saveResult(percentage, score, resultPath):
+    file = open(resultPath + str(percentage) + ".txt","w")
     file.write(str(percentage) + " " + str(score))
     file.close()
 
@@ -48,19 +50,30 @@ def evaluate(reference_corpus, translation_corpus):
     bleu = bleu_hook.compute_bleu(reference_corpus, translation_corpus)
     return bleu
 
-# Restore from checkpoint. Resume training with different dataset.
-def trainWithPreviousKnowledge(test_source, test_target, vocabulary):
-    percentages = [0.05, 0.10, 0.20, 0.40, 0.60, 0.80]
-    checkpoint_filename = "checkpointsAdaptiveWithPrev"
-    size = 167479
-    epoch = 3
+
+def trainWithPreviousKnowledge(datasetPath, datasetSize, transferMethod = None, transferVocabularyPath = None, sourceCheckpointPath = None, suffix = ""):
+    percentages = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    checkpoint_filename = "checkpointsAdaptiveWithPrev" + suffix
+    size = datasetSize
+    epoch = 10
+    test_source = datasetPath + "test_source.txt"
+    test_target = datasetPath + "test_target.txt"
+    resultPath = datasetPath + "AdaptiveWithPrev"
+
+    if(transferMethod is None):
+        vocabulary = datasetPath + "vocabulary.txt"
+    else:
+        vocabulary = transferVocabularyPath
+
+    data  = Data(FLAGS, "", "", "", "", vocabulary)
+    model = Seq2seq(data.vocab_size, FLAGS, transferMethod, sourceCheckpointPath)
 
     for i in percentages:
-        source_filename = "data/mscoco/train_source" + format(i, '.2f') + ".txt"
-        target_filename = "data/mscoco/train_target" + format(i, '.2f') + ".txt"
+        source_filename = datasetPath + format(i, '.1f') + "_source" + ".txt"
+        target_filename = datasetPath + format(i, '.1f') + "_target" + ".txt"
         data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
-        model = Seq2seq(data.vocab_size, FLAGS)
-        iterations = int(round(size * i * epoch / FLAGS.batch_size))
+        # iterations = int(round(size * i * epoch / FLAGS.batch_size))
+        iterations = 1
 
         input_fn, feed_fn = data.make_input_fn()
         test_fn = data.make_test_fn()
@@ -71,27 +84,82 @@ def trainWithPreviousKnowledge(test_source, test_target, vocabulary):
         print("Training with " + format(i, '.2f') + " percent of the dataset.")
         estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
 
+        model.setLoadParameters(False)
+
         test_paraphrases = list(estimator.predict(test_fn))
         data.builtTranslationCorpus(test_paraphrases)
         scr = evaluate(data.reference_corpus, data.translation_corpus)
         print(i, scr)
-        saveResult(i, scr)
+        saveResult(i, scr, resultPath)
+
+# Restore from checkpoint. Resume training with different dataset.
+def trainWithPreviousKnowledgePool(datasetPath, datasetSize, transferMethod = None, transferVocabularyPath = None, sourceCheckpointPath = None, suffix = ""):
+    percentages = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    checkpoint_filename = "checkpointsAdaptiveWithPrevPool" + suffix
+    size = datasetSize
+    epoch = 10
+    test_source = datasetPath + "test_source.txt"
+    test_target = datasetPath + "test_target.txt"
+    resultPath = datasetPath + "AdaptiveWithPrevWithPool"
+
+    if(transferMethod is None):
+        vocabulary = datasetPath + "vocabulary.txt"
+    else:
+        vocabulary = transferVocabularyPath
+
+    data  = Data(FLAGS, "", "", "", "", vocabulary)
+    model = Seq2seq(data.vocab_size, FLAGS, transferMethod, sourceCheckpointPath)
+
+
+    for i in percentages:
+        source_filename = datasetPath + format(i, '.1f') + "_pool_source" + ".txt"
+        target_filename = datasetPath + format(i, '.1f') + "_pool_target" + ".txt"
+        data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
+        # iterations = int(round(size * i * epoch / FLAGS.batch_size))
+        iterations = 1
+
+        input_fn, feed_fn = data.make_input_fn()
+        test_fn = data.make_test_fn()
+        print_inputs = tf.train.LoggingTensorHook(['source', 'target', 'predict'], every_n_iter=FLAGS.print_every,
+                formatter=data.get_formatter(['source', 'target', 'predict']))
+
+        estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=checkpoint_filename, params=FLAGS)
+        print("Training with " + format(i, '.2f') + " percent of the dataset.")
+        estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
+
+        model.setLoadParameters(False)
+
+        test_paraphrases = list(estimator.predict(test_fn))
+        data.builtTranslationCorpus(test_paraphrases)
+        scr = evaluate(data.reference_corpus, data.translation_corpus)
+        print(i, scr)
+        saveResult(i, scr, resultPath)
 
 
 # Keep checkpoint folders seperate. Restart training with each different block.
-def trainWithoutPreviousKnowledge(test_source, test_target, vocabulary):
-    percentages = [0.05, 0.10, 0.20, 0.40, 0.60, 0.80]
-    size = 167479
-    epoch = 3
+def trainWithoutPreviousKnowledge(datasetPath, datasetSize, transferMethod = None, transferVocabularyPath = None, sourceCheckpointPath = None, suffix = ""):
+    percentages = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    size = datasetSize
+    epoch = 10
+    test_source = datasetPath + "test_source.txt"
+    test_target = datasetPath + "test_target.txt"
+    resultPath = datasetPath + "AdaptiveWithoutPrev"
+
+    if(transferMethod is None):
+        vocabulary = datasetPath + "vocabulary.txt"
+    else:
+        vocabulary = transferVocabularyPath
+
 	
     for i in percentages:
         print("Training with " + str(i) + " percent of the dataset.")
-        source_filename = "data/mscoco/train_source" + format(i, '.2f') + ".txt"
-        target_filename = "data/mscoco/train_target" + format(i, '.2f') + ".txt"
-        checkpoint_filename = "checkpoints" + format(i, '.2f')
+        source_filename = datasetPath + format(i, '.1f') + "_pool_source" + ".txt"
+        target_filename = datasetPath + format(i, '.1f') + "_pool_target" + ".txt"
+        checkpoint_filename = "checkpointsWithoutPrev" + format(i, '.1f') + suffix
         data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
-        model = Seq2seq(data.vocab_size, FLAGS)
-        iterations = int(round(size * i * epoch / FLAGS.batch_size))
+        model = Seq2seq(data.vocab_size, FLAGS, transferMethod, sourceCheckpointPath)
+        # iterations = int(round(size * i * epoch / FLAGS.batch_size))
+        iterations = 1
 
         input_fn, feed_fn = data.make_input_fn()
         test_fn = data.make_test_fn()
@@ -102,98 +170,83 @@ def trainWithoutPreviousKnowledge(test_source, test_target, vocabulary):
         print("Training with " + format(i, '.2f') + " percent of the dataset.")
         estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
 
+        model.setLoadParameters(False)
+
         test_paraphrases = list(estimator.predict(test_fn))
         data.builtTranslationCorpus(test_paraphrases)
+        print(data.translation_corpus)
         scr = evaluate(data.reference_corpus, data.translation_corpus)
         print(i, scr)
-        saveResult(i, scr)
-
-# Train with MSCOCO. Restore from the checkpoint. Start training with Quora.
-def trainWithTransferLearning(sourceDataset, transferMethod):
-
-    mscoco_train_source = "data/" + sourceDataset + "/train_source.txt"
-    mscoco_train_target = "data/" + sourceDataset + "/train_target.txt"
-    mscoco_vocabulary = "data/" + sourceDataset + "/train_vocab.txt"
-    quora_train_source = 'data/quora/train_source.txt'
-    quora_train_target = 'data/quora/train_target.txt'
-    quora_test_source = 'data/quora/test_source.txt'
-    quora_test_target = 'data/quora/test_target.txt'
-    quora_vocabulary = 'data/quora/train_vocab.txt'
-    sourceDatasetIterations = 5
-    targetDatasetIterations = 5
-    model_directory = "checkpointsTransfer"
-    transfer_vocabulary = "transfer_vocab.txt"
-
-
-    # Train with MSCOCO dataset first  
-    data  = Data(FLAGS, mscoco_train_source, mscoco_train_target, FLAGS.input_test_filename, FLAGS.output_test_filename, transfer_vocabulary)
-    model = Seq2seq(data.vocab_size, FLAGS)
-
-    input_fn, feed_fn = data.make_input_fn()
-    print_inputs = tf.train.LoggingTensorHook(['source', 'target', 'predict'], every_n_iter=FLAGS.print_every,
-            formatter=data.get_formatter(['source', 'target', 'predict']))
-
-    estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=model_directory, params=FLAGS)
-    estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=sourceDatasetIterations)
-
-    # Load the model trained on MSCOCO and use it on Quora dataset.
-    data  = Data(FLAGS, quora_train_source, quora_train_target, quora_test_source, quora_test_target, transfer_vocabulary)
-
-    input_fn, feed_fn = data.make_input_fn()
-    test_fn = data.make_test_fn()
-    print_inputs = tf.train.LoggingTensorHook(['source', 'target', 'predict'], every_n_iter=FLAGS.print_every,
-            formatter=data.get_formatter(['source', 'target', 'predict']))
-
-
-    estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=targetDatasetIterations)
-
-    test_paraphrases = list(estimator.predict(test_fn))
-    data.builtTranslationCorpus(test_paraphrases)
-    print(data.translation_corpus)
-    print(evaluate(data.reference_corpus, data.translation_corpus))
+        saveResult(i, scr, resultPath)
 
 def trainWithActiveLearning(samplingMethod):
 	print("")
 
-def supervisedLearning(train_source, train_target, test_source, test_target, vocabulary):
+def supervisedLearning(datasetPath, datasetSize, transferMethod = None, transferVocabularyPath = None, sourceCheckpointPath = None, suffix = ""):
+
+    test_source = datasetPath + "test_source.txt"
+    test_target = datasetPath + "test_target.txt"
+    train_source = datasetPath + "train_source.txt"
+    train_target = datasetPath + "train_target.txt"
+    resultPath = datasetPath + "SL"
+
+    if(transferMethod is None):
+        vocabulary = datasetPath + "quora_msr_vocabulary.txt"
+    else:
+        vocabulary = transferVocabularyPath
+
+
     data  = Data(FLAGS, train_source, train_target, test_source, test_target, vocabulary)
-    model = Seq2seq(data.vocab_size, FLAGS)
-    size = 119446
+    model = Seq2seq(data.vocab_size, FLAGS, transferMethod, sourceCheckpointPath)
+    size = datasetSize
     epoch = 10
     # iterations = int(round(size * epoch / FLAGS.batch_size))
-    iterations = 5
+    iterations = 1
 
+    # var_list = checkpoint_utils.list_variables('checkpoints')
+    # for v in var_list: print(v)
 
     input_fn, feed_fn = data.make_input_fn()
-    test_fn = data.make_test_fn()
     print_inputs = tf.train.LoggingTensorHook(['source', 'target', 'predict'], every_n_iter=FLAGS.print_every,
             formatter=data.get_formatter(['source', 'target', 'predict']))
 
-    estimator = tf.estimator.Estimator(model_fn = model.make_graph, model_dir=FLAGS.model_dir, params=FLAGS)
+    estimator = tf.estimator.Estimator(model_fn = model.make_graph, model_dir="checkpointsQuoraMSR", params=FLAGS)
     estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
 
-    test_paraphrases = list(estimator.predict(test_fn))
+    model.setLoadParameters(False)
 
+    test_fn = data.make_test_fn()
+    test_paraphrases = list(estimator.predict(test_fn))
     data.builtTranslationCorpus(test_paraphrases)
-    # print(data.reference_corpus)
-    # print(data.translation_corpus)
-    print(evaluate(data.reference_corpus, data.translation_corpus))
+    scr = evaluate(data.reference_corpus, data.translation_corpus)
+    print(data.translation_corpus)
+    print(scr)
+    saveResult(100, scr, resultPath)
 
 
 def main(argv):
     tf.logging._logger.setLevel(logging.INFO)
 
-    train_source = 'data/quora/train_source.txt'
-    train_target = 'data/quora/train_target.txt'
-    test_source = 'data/quora/test_source.txt'
-    test_target = 'data/quora/test_target.txt'
-    vocab = 'data/quora/train_vocab.txt'
+    datasetPath = 'data/msr/'
+    # datasetPath = 'data/quora/'
+    # datasetPath = 'data/ppdb-lexical/'
+    msrSize = 2753
+    quoraSize = 119445
+    ppdbSize = 231716
+    # train_source = 'data/quora/'
+
+    # msrSize = 2753
+
+    # train_source = 'data/ppdb-lexical/'
+    # vocab = 'data/ppdb-lexical/'
+    # msrSize = 2753
 
 
-    # trainWithPreviousKnowledge(test_source, test_target, vocab)
-    # trainWithoutPreviousKnowledge(test_source, test_target, vocab)
-    # trainWithTransferLearning("mscoco", "")
-    supervisedLearning(train_source, train_target, test_source, test_target, vocab)
+    # trainWithPreviousKnowledge(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
+    # trainWithPreviousKnowledgePool(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
+    # trainWithoutPreviousKnowledge(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
+    # supervisedLearning(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
+    supervisedLearning(datasetPath, msrSize)
 
 
 if __name__ == "__main__":

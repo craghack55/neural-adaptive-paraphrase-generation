@@ -47,28 +47,27 @@ class Data:
     def make_test_fn(self):
 
         def sampler():
-            while True:
-                with open(self.test_source) as finput, open(self.test_target) as foutput:
-                    for source,target in zip(finput, foutput):
-                        self.reference_corpus.append(target.rstrip().split(" "))     
-                        yield {
-                            'input': self.tokenize_and_map(source)[:self.FLAGS.input_max_length - 1] + [self.END_TOKEN],
-                            'output': self.tokenize_and_map(target)[:self.FLAGS.output_max_length - 1] + [self.END_TOKEN]
-                        }
+            with open(self.test_source) as finput, open(self.test_target) as foutput:
+                for source,target in zip(finput, foutput):
+                    self.reference_corpus.append(target.rstrip().split(" "))     
+                    yield {
+                        'input': self.tokenize_and_map(source)[:self.FLAGS.input_max_length - 1] + [self.END_TOKEN],
+                        'output': self.tokenize_and_map(target)[:self.FLAGS.output_max_length - 1] + [self.END_TOKEN]
+                    }
 
         data_feed = sampler()
 
         def feed_fn():
             source, target = [], []
             input_length, output_length = 0, 0
-            for i in range(self.FLAGS.batch_size):
-                rec = next(data_feed)
+            for rec in data_feed:
+                # rec = next(data_feed)
                 source.append(rec['input'])
                 target.append(rec['output'])
                 input_length = max(input_length, len(source[-1]))
                 output_length = max(output_length, len(target[-1]))
 
-            for i in range(self.FLAGS.batch_size):
+            for i in range(0, len(source)):
                 source[i] += [self.END_TOKEN] * (input_length - len(source[i]))
                 target[i] += [self.END_TOKEN] * (output_length - len(target[i]))
 
