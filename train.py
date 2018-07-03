@@ -88,7 +88,7 @@ def trainWithPreviousKnowledge(datasetPath, datasetSize, transferMethod = None, 
 
         # test_paraphrases = list(estimator.predict(test_fn))
 
-        a = estimatorInfer.predict(test_fn)
+        a = estimator.predict(test_fn)
 
         test_paraphrases = []
 
@@ -100,7 +100,7 @@ def trainWithPreviousKnowledge(datasetPath, datasetSize, transferMethod = None, 
         # print(len(a))
 
         for i in a:
-            j = i[:, 0]
+            # j = i[:, 0]
             test_paraphrases.append(j)
 
         data.builtTranslationCorpus(test_paraphrases)
@@ -147,7 +147,7 @@ def trainWithPreviousKnowledgePool(datasetPath, datasetSize, transferMethod = No
 
         # test_paraphrases = list(estimator.predict(test_fn))
 
-        a = estimatorInfer.predict(test_fn)
+        a = estimator.predict(test_fn)
 
         test_paraphrases = []
 
@@ -159,7 +159,7 @@ def trainWithPreviousKnowledgePool(datasetPath, datasetSize, transferMethod = No
         # print(len(a))
 
         for i in a:
-            j = i[:, 0]
+            # j = i[:, 0]
             test_paraphrases.append(j)
 
         data.builtTranslationCorpus(test_paraphrases)
@@ -204,7 +204,7 @@ def trainWithoutPreviousKnowledge(datasetPath, datasetSize, transferMethod = Non
         test_fn = data.make_test_fn()
         # test_paraphrases = list(estimator.predict(test_fn))
 
-        a = estimatorInfer.predict(test_fn)
+        a = estimator.predict(test_fn)
 
         test_paraphrases = []
 
@@ -216,7 +216,7 @@ def trainWithoutPreviousKnowledge(datasetPath, datasetSize, transferMethod = Non
         # print(len(a))
 
         for i in a:
-            j = i[:, 0]
+            # j = i[:, 0]
             test_paraphrases.append(j)
 
         data.builtTranslationCorpus(test_paraphrases)
@@ -277,7 +277,7 @@ def supervisedLearning(datasetPath, datasetSize, transferMethod = None, transfer
     # print(len(a))
 
     for i in a:
-        j = i[:, 0]
+        # j = i[:, 0]
         test_paraphrases.append(j)
 
     data.builtTranslationCorpus(test_paraphrases)
