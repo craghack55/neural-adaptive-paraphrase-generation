@@ -72,11 +72,10 @@ def buildCorpus(filename, output):
 
 	with open(filename) as finput:
 		for l in finput:
-			# print(l)
-			t = l.strip().split("|||")
-			# if(t[0] == "1"):
-			source.write(filterSentence(t[1].replace(' ', '')) + '\n')
-			target.write(filterSentence(t[2].replace(' ', '')) + '\n')
+			t = l.strip().split("\t")
+			if(t[0] == "1"):
+				source.write(filterSentence(t[3]) + '\n')
+				target.write(filterSentence(t[4]) + '\n')
 
 	source.close()
 	target.close()
@@ -101,9 +100,9 @@ def buildVocabulary(source_files, output_filename):
 	file.close()
 
 if __name__ == "__main__":
-	buildIterationsPool("data/msr/train_source.txt", "data/msr/train_target.txt", 2753, "data/msr/")
+	# buildIterationsPool("data/msr/train_source.txt", "data/msr/train_target.txt", 2753, "data/msr/")
 	# nltk.download('punkt')
-	# source_files = ("data/quora/vocabulary.txt", "data/msr/vocabulary.txt")
-	# buildVocabulary(source_files, "data/quora_msr_vocabulary.txt")
+	source_files = ["data/mscoco/train_source.txt"]
+	buildVocabulary(source_files, "v.txt")
 	# testBLEU()
-	# buildCorpus("data/ppdb-lexical/ppdb.txt", "train")
+	# buildCorpus("data/msr/test.txt", "data/msr/test")

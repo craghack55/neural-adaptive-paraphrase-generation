@@ -3,3 +3,4 @@ checkpoints/
 checkpointsPPDB/
 checkpointsAdaptiveWithPrev/
 checkpointsTransfer/
+checkpointsAdaptiveWithPrevPool/

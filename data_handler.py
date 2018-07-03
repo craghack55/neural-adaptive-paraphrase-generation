@@ -15,7 +15,7 @@ class Data:
         self.rev_vocab = {}
         self.END_TOKEN = 1 
         self.UNK_TOKEN = 2
-        with open(vocabulary) as f:
+        with open(vocabulary, "r") as f:
             for idx, line in enumerate(f):
                 self.vocab[line.strip()] = idx
                 self.rev_vocab[idx] = line.strip()
@@ -30,9 +30,10 @@ class Data:
         for token in translations:
             sentence = []
             for t in token:
-                s = self.rev_vocab[t]
-                if(s != ' ' and s != '.' and s != ',' and s != '</S>' and s != '<S>'):
-                    sentence.append(s)
+                if(t != -1):
+                    s = self.rev_vocab[t]
+                    if(s != ' ' and s != '.' and s != ',' and s != '</S>' and s != '<S>'):
+                        sentence.append(s)
 
             # corpus.append(' '.join(sentence).replace('</S>','').replace('<S>', ''))
             corpus.append(sentence)
@@ -47,12 +48,12 @@ class Data:
     def make_test_fn(self):
 
         def sampler():
-            with open(self.test_source) as finput, open(self.test_target) as foutput:
+            with open(self.test_source, "r") as finput, open(self.test_target, "r") as foutput:
                 for source,target in zip(finput, foutput):
                     self.reference_corpus.append(target.rstrip().split(" "))     
                     yield {
-                        'input': self.tokenize_and_map(source)[:self.FLAGS.input_max_length - 1] + [self.END_TOKEN],
-                        'output': self.tokenize_and_map(target)[:self.FLAGS.output_max_length - 1] + [self.END_TOKEN]
+                        'input': [0] + self.tokenize_and_map(source)[:self.FLAGS.input_max_length - 1] + [self.END_TOKEN],
+                        'output': [0] + self.tokenize_and_map(target)[:self.FLAGS.output_max_length - 1] + [self.END_TOKEN]
                     }
 
         data_feed = sampler()
@@ -94,8 +95,8 @@ class Data:
                 with open(self.train_source) as finput, open(self.train_target) as foutput:
                     for source,target in zip(finput, foutput):
                         yield {
-                            'input': self.tokenize_and_map(source)[:self.FLAGS.input_max_length - 1] + [self.END_TOKEN],
-                            'output': self.tokenize_and_map(target)[:self.FLAGS.output_max_length - 1] + [self.END_TOKEN]
+                            'input': [0] + self.tokenize_and_map(source)[:self.FLAGS.input_max_length - 1] + [self.END_TOKEN],
+                            'output': [0] + self.tokenize_and_map(target)[:self.FLAGS.output_max_length - 1] + [self.END_TOKEN]
                         }
 
         data_feed = sampler()
