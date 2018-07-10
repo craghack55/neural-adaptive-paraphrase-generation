@@ -8,17 +8,26 @@ class Data:
         self.train_target = train_target
         self.test_source = test_source
         self.test_target = test_target
-
+        self.weights = []
 
         # create vocab and reverse vocab maps
         self.vocab     = {}
         self.rev_vocab = {}
         self.END_TOKEN = 1 
         self.UNK_TOKEN = 2
+
+        # with open(vocabulary, "r") as f:
+        #     for idx, line in enumerate(f):
+        #         self.vocab[line.strip()] = idx
+        #         self.rev_vocab[idx] = line.strip()
+
+        
+
         with open(vocabulary, "r") as f:
             for idx, line in enumerate(f):
                 self.vocab[line.strip()] = idx
                 self.rev_vocab[idx] = line.strip()
+
         self.vocab_size = len(self.vocab)
         self.reference_corpus = []
         self.translation_corpus = []

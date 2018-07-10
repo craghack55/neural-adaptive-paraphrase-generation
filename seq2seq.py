@@ -54,6 +54,11 @@ class Seq2seq:
         encoder_outputs, encoder_final_state = tf.nn.dynamic_rnn(multi_rnn_cell, input_embed, dtype=tf.float32)
         # encoder_outputs, encoder_final_state = tf.nn.dynamic_rnn(cell, input_embed, dtype=tf.float32)
 
+
+# ****source ==  how close are we or not close right now to world war                
+# ****target ==  are we getting closer to world war                    
+# ****predict ==  how close is world war iii  
+
         
         if(self.transferMethod is not None and self.loadParameters):
             if(self.transferMethod == "embeddingOnly"):
@@ -163,7 +168,7 @@ class Seq2seq:
                     return outputs[0]
 
         if(mode == tf.contrib.learn.ModeKeys.INFER):
-            if(inferGraph == 1):
+            if(self.inferGraph == 1):
                 pred_outputs = decode(None, mode, 'decode')
 
                 # tf.identity(pred_outputs[0], name='predict')
@@ -188,17 +193,14 @@ class Seq2seq:
             loss = tf.contrib.seq2seq.sequence_loss(train_outputs.rnn_output, output, weights=weights)
 
             tvars = tf.trainable_variables()
-
-            for i in tvars:
-                print(i)
             
-            if(self.transferMethod == "schema2"):
+            if(self.transferMethod == "scheme2"):
                 train_vars = [var for var in tvars if not "cell_0" or not "cell_1" in var.name]
             else:
-                if(self.transferMethod == "schema3"):
+                if(self.transferMethod == "scheme3"):
                     train_vars = [var for var in tvars if not "cell_0" or not "cell_1" or not "cell_2" in var.name]
                 else:
-                    if(self.transferMethod == "schema1"):
+                    if(self.transferMethod == "scheme1"):
                         train_vars = [var for var in tvars if not "cell_0" in var.name]
                     else:
                         train_vars = tvars
