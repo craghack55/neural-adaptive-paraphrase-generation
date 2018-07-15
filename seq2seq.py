@@ -41,10 +41,16 @@ class Seq2seq:
         if self.FLAGS.use_residual_lstm:
             cell2 = tf.contrib.rnn.ResidualWrapper(cell2)
 
-        if(self.transferMethod == "scheme3"):
+        if(self.transferMethod == "scheme3" or self.transferMethod == "scheme4" or self.transferMethod == "scheme5" or self.transferMethod == "scheme6"):
             cell4 = tf.contrib.rnn.LSTMCell(num_units=num_units)
             cell4 = tf.nn.rnn_cell.DropoutWrapper(cell4, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
-            cells = [cell, cell2, cell3, cell4]
+
+            if(self.transferMethod == "scheme5" or self.transferMethod == "scheme6"):
+                cell5 = tf.contrib.rnn.LSTMCell(num_units=num_units)
+                cell5 = tf.nn.rnn_cell.DropoutWrapper(cell5, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
+                cells = [cell, cell2, cell3, cell4, cell5]
+            else:
+                cells = [cell, cell2, cell3, cell4]
 
         else:
             cells = [cell, cell2, cell3]
@@ -66,12 +72,21 @@ class Seq2seq:
                     'embed/': 'embed/'
                 }
             else:
-                assignment_map = {
-                    'rnn/multi_rnn_cell/cell_1/': 'rnn/multi_rnn_cell/cell_1/',
-                    'rnn/multi_rnn_cell/cell_0/': 'rnn/multi_rnn_cell/cell_0/',
-                    'rnn/multi_rnn_cell/cell_2/': 'rnn/multi_rnn_cell/cell_2/',
-                    'embed/': 'embed/'
-                }
+                if(self.transferMethod != "scheme5" and self.transferMethod != "scheme6"):
+                    assignment_map = {
+                        'rnn/multi_rnn_cell/cell_1/': 'rnn/multi_rnn_cell/cell_1/',
+                        'rnn/multi_rnn_cell/cell_0/': 'rnn/multi_rnn_cell/cell_0/',
+                        'rnn/multi_rnn_cell/cell_2/': 'rnn/multi_rnn_cell/cell_2/',
+                        'embed/': 'embed/'
+                    }
+                else:
+                    assignment_map = {
+                        'rnn/multi_rnn_cell/cell_1/': 'rnn/multi_rnn_cell/cell_1/',
+                        'rnn/multi_rnn_cell/cell_0/': 'rnn/multi_rnn_cell/cell_0/',
+                        'rnn/multi_rnn_cell/cell_2/': 'rnn/multi_rnn_cell/cell_2/',
+                        'rnn/multi_rnn_cell/cell_3/': 'rnn/multi_rnn_cell/cell_3/',
+                        'embed/': 'embed/'
+                    }
 
             tf.train.init_from_checkpoint(self.sourceCheckpointPath, assignment_map)
 
@@ -91,12 +106,16 @@ class Seq2seq:
                 if self.FLAGS.use_residual_lstm:
                     cell2 = tf.contrib.rnn.ResidualWrapper(cell2)
 
-
-                if(self.transferMethod == "scheme3"):
+                if(self.transferMethod == "scheme3" or self.transferMethod == "scheme4" or self.transferMethod == "scheme5" or self.transferMethod == "scheme6"):
                     cell4 = tf.contrib.rnn.LSTMCell(num_units=num_units)
                     cell4 = tf.nn.rnn_cell.DropoutWrapper(cell4, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
-                    cells = [cell, cell2, cell3, cell4]
 
+                    if(self.transferMethod == "scheme5" or self.transferMethod == "scheme6"):
+                        cell5 = tf.contrib.rnn.LSTMCell(num_units=num_units)
+                        cell5 = tf.nn.rnn_cell.DropoutWrapper(cell5, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
+                        cells = [cell, cell2, cell3, cell4, cell5]
+                    else:
+                        cells = [cell, cell2, cell3, cell4]
                 else:
                     cells = [cell, cell2, cell3]
 
@@ -105,16 +124,33 @@ class Seq2seq:
                 if(self.transferMethod is not None and self.loadParameters):
                     if(self.transferMethod != "embeddingOnly"):
 
-                        assignment_map = {
-                            'decode/memory_layer/' : 'decode/memory_layer/',
-                            'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_1/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_1/',
-                            'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_2/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_2/',
-                            'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_0/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_0/',
-                            'decode/decoder/output_projection_wrapper/attention_wrapper/bahdanau_attention/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/bahdanau_attention/',
-                            'decode/decoder/output_projection_wrapper/kernel/' : 'decode/decoder/output_projection_wrapper/kernel/',
-                            'decode/decoder/output_projection_wrapper/attention_wrapper/attention_layer/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/attention_layer/',
-                            'decode/decoder/output_projection_wrapper/bias/' : 'decode/decoder/output_projection_wrapper/bias/'
-                        }
+                        if(self.transferMethod != "scheme5" and self.transferMethod != "scheme6"):
+
+                            print("sdfsdfsfdsfsdfsdfsd")
+
+                            assignment_map = {
+                                'decode/memory_layer/' : 'decode/memory_layer/',
+                                'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_1/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_1/',
+                                'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_2/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_2/',
+                                'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_0/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_0/',
+                                'decode/decoder/output_projection_wrapper/attention_wrapper/bahdanau_attention/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/bahdanau_attention/',
+                                'decode/decoder/output_projection_wrapper/kernel/' : 'decode/decoder/output_projection_wrapper/kernel/',
+                                'decode/decoder/output_projection_wrapper/attention_wrapper/attention_layer/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/attention_layer/',
+                                'decode/decoder/output_projection_wrapper/bias/' : 'decode/decoder/output_projection_wrapper/bias/'
+                            }
+
+                        else:
+                            assignment_map = {
+                                'decode/memory_layer/' : 'decode/memory_layer/',
+                                'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_1/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_1/',
+                                'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_2/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_2/',
+                                'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_0/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_0/',
+                                'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_3/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/multi_rnn_cell/cell_3/',
+                                'decode/decoder/output_projection_wrapper/attention_wrapper/bahdanau_attention/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/bahdanau_attention/',
+                                'decode/decoder/output_projection_wrapper/kernel/' : 'decode/decoder/output_projection_wrapper/kernel/',
+                                'decode/decoder/output_projection_wrapper/attention_wrapper/attention_layer/' : 'decode/decoder/output_projection_wrapper/attention_wrapper/attention_layer/',
+                                'decode/decoder/output_projection_wrapper/bias/' : 'decode/decoder/output_projection_wrapper/bias/'
+                            }
 
                         tf.train.init_from_checkpoint(self.sourceCheckpointPath, assignment_map)
 
@@ -203,7 +239,13 @@ class Seq2seq:
                     if(self.transferMethod == "scheme1"):
                         train_vars = [var for var in tvars if not "cell_0" in var.name]
                     else:
-                        train_vars = tvars
+                        if(self.transferMethod == "scheme4"):
+                            train_vars = [var for var in tvars if not "cell_0" in var.name]
+                        else:
+                            if(self.transferMethod == "scheme5"):
+                                 train_vars = [var for var in tvars if not "cell_0" or not "cell_1" in var.name]
+                            else:
+                                train_vars = tvars
 
             train_op = layers.optimize_loss(
                 loss, tf.train.get_global_step(),

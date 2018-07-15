@@ -51,7 +51,7 @@ def evaluate(reference_corpus, translation_corpus):
 
 
 def trainWithPreviousKnowledge(datasetPath, datasetSize, transferMethod = None, transferVocabularyPath = None, sourceCheckpointPath = None, suffix = ""):
-    percentages = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    percentages = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     checkpoint_filename = "checkpointsAdaptiveWithPrev" + suffix
     size = datasetSize
     epoch = 5
@@ -60,7 +60,7 @@ def trainWithPreviousKnowledge(datasetPath, datasetSize, transferMethod = None, 
     resultPath = datasetPath + "AdaptiveWithPrev"
 
     if(transferMethod is None):
-        vocabulary = datasetPath + "quora_msr_vocabulary.txt"
+        vocabulary = datasetPath + "v.txt"
     else:
         vocabulary = transferVocabularyPath
 
@@ -68,8 +68,8 @@ def trainWithPreviousKnowledge(datasetPath, datasetSize, transferMethod = None, 
     model = Seq2seq(data.vocab_size, FLAGS, transferMethod, sourceCheckpointPath)
 
     for i in percentages:
-        source_filename = datasetPath + format(i, '.1f') + "_source" + ".txt"
-        target_filename = datasetPath + format(i, '.1f') + "_target" + ".txt"
+        source_filename = datasetPath + "without-pool/" + format(i, '.1f') + "_source" + ".txt"
+        target_filename = datasetPath + "without-pool/" + format(i, '.1f') + "_target" + ".txt"
         data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
         iterations = int(round(size * i * epoch / FLAGS.batch_size))
         # iterations = 1
@@ -107,9 +107,10 @@ def trainWithPreviousKnowledge(datasetPath, datasetSize, transferMethod = None, 
         print(i, scr)
         saveResult(i, scr, resultPath)
 
+
 # Restore from checkpoint. Resume training with different dataset.
-def trainWithPreviousKnowledgePool(datasetPath, datasetSize, transferMethod = None, transferVocabularyPath = None, sourceCheckpointPath = None, suffix = ""):
-    percentages = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+def trainWithNetworkExpansion(datasetPath, datasetSize, transferMethod = None, transferVocabularyPath = None, sourceCheckpointPath = None, suffix = ""):
+    percentages = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     checkpoint_filename = "checkpointsAdaptiveWithPrevPool" + suffix
     size = datasetSize
     epoch = 5
@@ -118,7 +119,7 @@ def trainWithPreviousKnowledgePool(datasetPath, datasetSize, transferMethod = No
     resultPath = datasetPath + "AdaptiveWithPrevWithPool"
 
     if(transferMethod is None):
-        vocabulary = datasetPath + "quora_msr_vocabulary.txt"
+        vocabulary = datasetPath + "v.txt"
     else:
         vocabulary = transferVocabularyPath
 
@@ -127,8 +128,77 @@ def trainWithPreviousKnowledgePool(datasetPath, datasetSize, transferMethod = No
 
 
     for i in percentages:
-        source_filename = datasetPath + format(i, '.1f') + "_pool_source" + ".txt"
-        target_filename = datasetPath + format(i, '.1f') + "_pool_target" + ".txt"
+        source_filename = datasetPath + "pool/" + format(i, '.1f') + "_pool_source" + ".txt"
+        target_filename = datasetPath + "pool/" + format(i, '.1f') + "_pool_target" + ".txt"
+        data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
+        # iterations = int(round(size * i * epoch / FLAGS.batch_size))
+        iterations = 1
+
+        input_fn, feed_fn = data.make_input_fn()
+        test_fn = data.make_test_fn()
+        print_inputs = tf.train.LoggingTensorHook(['source', 'target', 'predict'], every_n_iter=FLAGS.print_every,
+                formatter=data.get_formatter(['source', 'target', 'predict']))
+
+
+        if(i == 0.5):
+            model = Seq2seq(data.vocab_size, FLAGS, "scheme4", checkpoint_filename)
+            checkpoint_filename = "expansion" + str(i)
+        else:
+            if(i == 0.8):
+                model = Seq2seq(data.vocab_size, FLAGS, "scheme5", checkpoint_filename)
+                checkpoint_filename = "expansion" + str(i)
+
+
+        estimator = tf.estimator.Estimator(model_fn=model.make_graph, model_dir=checkpoint_filename)
+        print("Training with " + format(i, '.2f') + " percent of the dataset.")
+        estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
+
+        model.setLoadParameters(False)
+
+        # test_paraphrases = list(estimator.predict(test_fn))
+
+        # a = estimator.predict(test_fn)
+
+        # test_paraphrases = []
+
+        # # a = list(a)
+
+        # # for i in a:
+        # #     print(i.shape)
+
+        # # print(len(a))
+
+        # for j in a:
+        #     # j = i[:, 0]
+        #     test_paraphrases.append(j)
+
+        # data.builtTranslationCorpus(test_paraphrases)
+        # scr = evaluate(data.reference_corpus, data.translation_corpus)
+        # print(i, scr)
+        # saveResult(i, scr, resultPath)
+
+# Restore from checkpoint. Resume training with different dataset.
+def trainWithPreviousKnowledgePool(datasetPath, datasetSize, transferMethod = None, transferVocabularyPath = None, sourceCheckpointPath = None, suffix = ""):
+    percentages = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    checkpoint_filename = "checkpointsAdaptiveWithPrevPool" + suffix
+    size = datasetSize
+    epoch = 5
+    test_source = datasetPath + "test_source.txt"
+    test_target = datasetPath + "test_target.txt"
+    resultPath = datasetPath + "AdaptiveWithPrevWithPool"
+
+    if(transferMethod is None):
+        vocabulary = datasetPath + "v.txt"
+    else:
+        vocabulary = transferVocabularyPath
+
+    data  = Data(FLAGS, "", "", "", "", vocabulary)
+    model = Seq2seq(data.vocab_size, FLAGS, transferMethod, sourceCheckpointPath)
+
+
+    for i in percentages:
+        source_filename = datasetPath + "pool/" + format(i, '.1f') + "_pool_source" + ".txt"
+        target_filename = datasetPath + "pool/" + format(i, '.1f') + "_pool_target" + ".txt"
         data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
         iterations = int(round(size * i * epoch / FLAGS.batch_size))
         # iterations = 1
@@ -169,7 +239,7 @@ def trainWithPreviousKnowledgePool(datasetPath, datasetSize, transferMethod = No
 
 # Keep checkpoint folders seperate. Restart training with each different block.
 def trainWithoutPreviousKnowledge(datasetPath, datasetSize, transferMethod = None, transferVocabularyPath = None, sourceCheckpointPath = None, suffix = ""):
-    percentages = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    percentages = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     size = datasetSize
     epoch = 3
     test_source = datasetPath + "test_source.txt"
@@ -177,14 +247,14 @@ def trainWithoutPreviousKnowledge(datasetPath, datasetSize, transferMethod = Non
     resultPath = datasetPath + "AdaptiveWithoutPrev"
 
     if(transferMethod is None):
-        vocabulary = datasetPath + "quora_msr_vocabulary.txt"
+        vocabulary = datasetPath + "v.txt"
     else:
         vocabulary = transferVocabularyPath
 
 	
     for i in percentages:
-        source_filename = datasetPath + format(i, '.1f') + "_pool_source" + ".txt"
-        target_filename = datasetPath + format(i, '.1f') + "_pool_target" + ".txt"
+        source_filename = datasetPath + "pool/" + format(i, '.1f') + "_pool_source" + ".txt"
+        target_filename = datasetPath + "pool/" + format(i, '.1f') + "_pool_target" + ".txt"
         checkpoint_filename = "checkpointsWithoutPrev" + format(i, '.1f') + suffix
         data  = Data(FLAGS, source_filename, target_filename, test_source, test_target, vocabulary)
         model = Seq2seq(data.vocab_size, FLAGS, transferMethod, sourceCheckpointPath)
@@ -233,7 +303,7 @@ def supervisedLearning(datasetPath, datasetSize, transferMethod = None, transfer
     resultPath = datasetPath + "SL"
 
     if(transferMethod is None):
-        vocabulary = datasetPath + "mscoco_quora_vocabulary.txt"
+        vocabulary = datasetPath + "v.txt"
     else:
         vocabulary = transferVocabularyPath
 
@@ -301,13 +371,13 @@ def main(argv):
     # msrSize = 2753
 
 
-    # trainWithoutPreviousKnowledge(datasetPath, msrSize)
+    trainWithNetworkExpansion(datasetPath, quoraSize)
 
     # trainWithPreviousKnowledge(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
     # trainWithPreviousKnowledgePool(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
     # trainWithoutPreviousKnowledge(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
     # supervisedLearning(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
-    supervisedLearning(datasetPath, quoraSize)
+    #supervisedLearning(datasetPath, quoraSize)
 
 
 if __name__ == "__main__":
