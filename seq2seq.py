@@ -18,6 +18,11 @@ class Seq2seq:
         embed_dim = self.FLAGS.embed_dim
         num_units = self.FLAGS.num_units
 
+        if(mode == tf.contrib.learn.ModeKeys.INFER):
+            drop_prob = 0.0
+        else:
+            drop_prob = self.FLAGS.drop_prob
+
         input, output   = features['input'], features['output']
         batch_size     = tf.shape(input)[0]
         start_tokens   = tf.zeros([batch_size], dtype= tf.int64)
@@ -34,20 +39,20 @@ class Seq2seq:
         cell3 = tf.contrib.rnn.LSTMCell(num_units=num_units)
 
 
-        cell = tf.nn.rnn_cell.DropoutWrapper(cell, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
-        cell2 = tf.nn.rnn_cell.DropoutWrapper(cell2, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
-        cell3 = tf.nn.rnn_cell.DropoutWrapper(cell3, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
+        cell = tf.nn.rnn_cell.DropoutWrapper(cell, output_keep_prob = 1 - drop_prob, input_keep_prob = 1 - drop_prob)
+        cell2 = tf.nn.rnn_cell.DropoutWrapper(cell2, output_keep_prob = 1 - drop_prob, input_keep_prob = 1 - drop_prob)
+        cell3 = tf.nn.rnn_cell.DropoutWrapper(cell3, output_keep_prob = 1 - drop_prob, input_keep_prob = 1 - drop_prob)
 
         if self.FLAGS.use_residual_lstm:
             cell2 = tf.contrib.rnn.ResidualWrapper(cell2)
 
         if(self.transferMethod == "scheme3" or self.transferMethod == "scheme4" or self.transferMethod == "scheme5" or self.transferMethod == "scheme6"):
             cell4 = tf.contrib.rnn.LSTMCell(num_units=num_units)
-            cell4 = tf.nn.rnn_cell.DropoutWrapper(cell4, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
+            cell4 = tf.nn.rnn_cell.DropoutWrapper(cell4, output_keep_prob = 1 - drop_prob, input_keep_prob = 1 - drop_prob)
 
             if(self.transferMethod == "scheme5" or self.transferMethod == "scheme6"):
                 cell5 = tf.contrib.rnn.LSTMCell(num_units=num_units)
-                cell5 = tf.nn.rnn_cell.DropoutWrapper(cell5, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
+                cell5 = tf.nn.rnn_cell.DropoutWrapper(cell5, output_keep_prob = 1 - drop_prob, input_keep_prob = 1 - drop_prob)
                 cells = [cell, cell2, cell3, cell4, cell5]
             else:
                 cells = [cell, cell2, cell3, cell4]
@@ -99,20 +104,20 @@ class Seq2seq:
                 cell2 = tf.contrib.rnn.LSTMCell(num_units=num_units)
                 cell3 = tf.contrib.rnn.LSTMCell(num_units=num_units)
 
-                cell = tf.nn.rnn_cell.DropoutWrapper(cell, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
-                cell2 = tf.nn.rnn_cell.DropoutWrapper(cell2, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
-                cell3 = tf.nn.rnn_cell.DropoutWrapper(cell3, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
+                cell = tf.nn.rnn_cell.DropoutWrapper(cell, output_keep_prob = 1 - drop_prob, input_keep_prob = 1 - drop_prob)
+                cell2 = tf.nn.rnn_cell.DropoutWrapper(cell2, output_keep_prob = 1 - drop_prob, input_keep_prob = 1 - drop_prob)
+                cell3 = tf.nn.rnn_cell.DropoutWrapper(cell3, output_keep_prob = 1 - drop_prob, input_keep_prob = 1 - drop_prob)
 
                 if self.FLAGS.use_residual_lstm:
                     cell2 = tf.contrib.rnn.ResidualWrapper(cell2)
 
                 if(self.transferMethod == "scheme3" or self.transferMethod == "scheme4" or self.transferMethod == "scheme5" or self.transferMethod == "scheme6"):
                     cell4 = tf.contrib.rnn.LSTMCell(num_units=num_units)
-                    cell4 = tf.nn.rnn_cell.DropoutWrapper(cell4, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
+                    cell4 = tf.nn.rnn_cell.DropoutWrapper(cell4, output_keep_prob = 1 - drop_prob, input_keep_prob = 1 - drop_prob)
 
                     if(self.transferMethod == "scheme5" or self.transferMethod == "scheme6"):
                         cell5 = tf.contrib.rnn.LSTMCell(num_units=num_units)
-                        cell5 = tf.nn.rnn_cell.DropoutWrapper(cell5, output_keep_prob = 1 - self.FLAGS.drop_prob, input_keep_prob = 1 - self.FLAGS.drop_prob)
+                        cell5 = tf.nn.rnn_cell.DropoutWrapper(cell5, output_keep_prob = 1 - drop_prob, input_keep_prob = 1 - drop_prob)
                         cells = [cell, cell2, cell3, cell4, cell5]
                     else:
                         cells = [cell, cell2, cell3, cell4]

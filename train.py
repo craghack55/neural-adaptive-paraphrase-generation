@@ -20,8 +20,8 @@ flags.DEFINE_float('drop_prob'         , 0.5           , '')
 # Training related
 flags.DEFINE_float('learning_rate'       , 0.001         , 'learning rate for the optimizer')
 flags.DEFINE_string('optimizer'          , 'Adam'        , 'Name of the train source file')
-flags.DEFINE_integer('batch_size'        , 50            , 'random seed for training sampling')
-flags.DEFINE_integer('print_every' , 10 				, 	'print records every n iteration') 
+flags.DEFINE_integer('batch_size'        , 100            , 'random seed for training sampling')
+flags.DEFINE_integer('print_every' , 1000 				, 	'print records every n iteration') 
 flags.DEFINE_integer('iterations' , 10000 				, 'number of iterations to train')
 flags.DEFINE_string('model_dir'          		, 'checkpoints' , 'Directory where to save the model')
 
@@ -157,7 +157,7 @@ def trainWithNetworkExpansion(datasetPath, datasetSize, transferMethod = None, t
 
         # test_paraphrases = list(estimator.predict(test_fn))
 
-        # a = estimator.predict(test_fn)
+        a = estimator.predict(test_fn)
 
         # test_paraphrases = []
 
@@ -168,14 +168,14 @@ def trainWithNetworkExpansion(datasetPath, datasetSize, transferMethod = None, t
 
         # # print(len(a))
 
-        # for j in a:
-        #     # j = i[:, 0]
-        #     test_paraphrases.append(j)
+        for j in a:
+            # j = i[:, 0]
+            test_paraphrases.append(j)
 
-        # data.builtTranslationCorpus(test_paraphrases)
-        # scr = evaluate(data.reference_corpus, data.translation_corpus)
-        # print(i, scr)
-        # saveResult(i, scr, resultPath)
+        data.builtTranslationCorpus(test_paraphrases)
+        scr = evaluate(data.reference_corpus, data.translation_corpus)
+        print(i, scr)
+        saveResult(i, scr, resultPath)
 
 # Restore from checkpoint. Resume training with different dataset.
 def trainWithPreviousKnowledgePool(datasetPath, datasetSize, transferMethod = None, transferVocabularyPath = None, sourceCheckpointPath = None, suffix = ""):
@@ -322,11 +322,11 @@ def supervisedLearning(datasetPath, datasetSize, transferMethod = None, transfer
     print_inputs = tf.train.LoggingTensorHook(['source', 'target', 'predict'], every_n_iter=FLAGS.print_every,
             formatter=data.get_formatter(['source', 'target', 'predict']))
 
-    #estimator = tf.estimator.Estimator(model_fn = model.make_graph, model_dir="checkpointsQuoraMSR")
-    #estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
+    estimator = tf.estimator.Estimator(model_fn = model.make_graph, model_dir="checkpointsQuoraMSR")
+    estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
 
     # modelInfer = Seq2seq(data.vocab_size, FLAGS, transferMethod, sourceCheckpointPath, False, inferGraph = 1)    
-    estimator = tf.estimator.Estimator(model_fn = model.make_graph, model_dir="data/recent/checkpointsQuoraMSCOCO")
+    # estimator = tf.estimator.Estimator(model_fn = model.make_graph, model_dir="data/checkpointsQuoraMSCOCO")
     model.setLoadParameters(False)
 
     test_fn = data.make_test_fn()
@@ -371,13 +371,13 @@ def main(argv):
     # msrSize = 2753
 
 
-    trainWithNetworkExpansion(datasetPath, quoraSize)
+    #trainWithNetworkExpansion(datasetPath, quoraSize)
 
     # trainWithPreviousKnowledge(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
     # trainWithPreviousKnowledgePool(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
     # trainWithoutPreviousKnowledge(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
     # supervisedLearning(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
-    #supervisedLearning(datasetPath, quoraSize)
+    supervisedLearning(datasetPath, quoraSize)
 
 
 if __name__ == "__main__":
