@@ -1,0 +1,147 @@
+\begin{thebibliography}{}
+
+\bibitem[Bahdanau et~al., 2014]{bahdanau}
+Bahdanau, D., Cho, K., and Bengio, Y. (2014).
+\newblock Neural machine translation by jointly learning to align and
+  translate.
+\newblock {\em CoRR}, abs/1409.0473.
+
+\bibitem[Brad and Rebedea, 2017]{brad}
+Brad, F. and Rebedea, T. (2017).
+\newblock Neural paraphrase generation using transfer learning.
+\newblock In {\em Proceedings of the 10th International Conference on Natural
+  Language Generation}, pages 257--261. Association for Computational
+  Linguistics.
+
+\bibitem[Cho et~al., 2014]{cho}
+Cho, K., van Merrienboer, B., G{\"{u}}l{\c{c}}ehre, {\c{C}}., Bougares, F.,
+  Schwenk, H., and Bengio, Y. (2014).
+\newblock Learning phrase representations using {RNN} encoder-decoder for
+  statistical machine translation.
+\newblock {\em CoRR}, abs/1406.1078.
+
+\bibitem[Dolan and Brockett, 2005]{msrp}
+Dolan, B. and Brockett, C. (2005).
+\newblock Automatically constructing a corpus of sentential paraphrases.
+\newblock In {\em Third International Workshop on Paraphrasing (IWP2005)}. Asia
+  Federation of Natural Language Processing.
+
+\bibitem[Gonz\'{a}lez-Rubio et~al., 2012]{rubio}
+Gonz\'{a}lez-Rubio, J., Ortiz-Mart\'{\i}nez, D., and Casacuberta, F. (2012).
+\newblock Active learning for interactive machine translation.
+\newblock In {\em Proceedings of the 13th Conference of the European Chapter of
+  the Association for Computational Linguistics}, EACL '12, pages 245--254,
+  Stroudsburg, PA, USA. Association for Computational Linguistics.
+
+\bibitem[Gupta et~al., 2017]{Guptaetal}
+Gupta, A., Agarwal, A., Singh, P., and Rai, P. (2017).
+\newblock A deep generative framework for paraphrase generation.
+\newblock {\em CoRR}, abs/1709.05074.
+
+\bibitem[Hannun et~al., 2014]{hannun}
+Hannun, A.~Y., Case, C., Casper, J., Catanzaro, B., Diamos, G., Elsen, E.,
+  Prenger, R., Satheesh, S., Sengupta, S., Coates, A., and Ng, A.~Y. (2014).
+\newblock Deep speech: Scaling up end-to-end speech recognition.
+\newblock {\em CoRR}, abs/1412.5567.
+
+\bibitem[Li et~al., 2017]{Lietal}
+Li, Z., Jiang, X., Shang, L., and Li, H. (2017).
+\newblock Paraphrase generation with deep reinforcement learning.
+\newblock {\em CoRR}, abs/1711.00279.
+
+\bibitem[Lin et~al., 2014]{mscoco}
+Lin, T., Maire, M., Belongie, S.~J., Bourdev, L.~D., Girshick, R.~B., Hays, J.,
+  Perona, P., Ramanan, D., Doll{\'{a}}r, P., and Zitnick, C.~L. (2014).
+\newblock Microsoft {COCO:} common objects in context.
+\newblock {\em CoRR}, abs/1405.0312.
+
+\bibitem[Mou et~al., 2016]{mou}
+Mou, L., Meng, Z., Yan, R., Li, G., Xu, Y., Zhang, L., and Jin, Z. (2016).
+\newblock How transferable are neural networks in {NLP} applications?
+\newblock {\em CoRR}, abs/1603.06111.
+
+\bibitem[Papineni et~al., 2002]{Papinenietal}
+Papineni, K., Roukos, S., Ward, T., and Zhu, W.-J. (2002).
+\newblock Bleu: A method for automatic evaluation of machine translation.
+\newblock In {\em Proceedings of the 40th Annual Meeting on Association for
+  Computational Linguistics}, ACL '02, pages 311--318, Stroudsburg, PA, USA.
+  Association for Computational Linguistics.
+
+\bibitem[Parisi et~al., 2018]{parisi}
+Parisi, G.~I., Kemker, R., Part, J.~L., Kanan, C., and Wermter, S. (2018).
+\newblock Continual lifelong learning with neural networks: {A} review.
+\newblock {\em CoRR}, abs/1802.07569.
+
+\bibitem[Paszke, 2016]{paszke}
+Paszke, A. (2016).
+\newblock Lstm implementation explained.
+
+\bibitem[Pavlick et~al., 2015]{ppdb}
+Pavlick, E., Ganitkevitch, J., Rastogi, P., Durme, B.~V., and Callison-Burch,
+  C. (2015).
+\newblock Ppdb 2.0: Better paraphrase ranking, fine-grained entailment
+  relations, word embeddings, and style classification.
+\newblock In {\em ACL}.
+
+\bibitem[Prakash et~al., 2016]{Prakashetal}
+Prakash, A., Hasan, S.~A., Lee, K., Datla, V.~V., Qadir, A., Liu, J., and
+  Farri, O. (2016).
+\newblock Neural paraphrase generation with stacked residual {LSTM} networks.
+\newblock {\em CoRR}, abs/1610.03098.
+
+\bibitem[Shen et~al., 2017]{shen}
+Shen, Y., Yun, H., Lipton, Z.~C., Kronrod, Y., and Anandkumar, A. (2017).
+\newblock Deep active learning for named entity recognition.
+\newblock {\em CoRR}, abs/1707.05928.
+
+\bibitem[Sriram et~al., 2017]{siriam}
+Sriram, A., Jun, H., Satheesh, S., and Coates, A. (2017).
+\newblock Cold fusion: Training seq2seq models together with language models.
+\newblock {\em CoRR}, abs/1708.06426.
+
+\bibitem[Sutskever et~al., 2014]{Vinyalsetal}
+Sutskever, I., Vinyals, O., and Le, Q.~V. (2014).
+\newblock Sequence to sequence learning with neural networks.
+\newblock {\em CoRR}, abs/1409.3215.
+
+\bibitem[Trivedi et~al., 2017]{trivedi}
+Trivedi, G., Pham, P., Chapman, W.~W., Hwa, R., Wiebe, J., and Hochheiser, H.
+  (2017).
+\newblock An interactive tool for natural language processing on clinical text.
+\newblock {\em CoRR}, abs/1707.01890.
+
+\bibitem[Yimam and Biemann, 2018]{par4sim}
+Yimam, S.~M. and Biemann, C. (2018).
+\newblock Par4sim - adaptive paraphrasing for text simplification.
+\newblock In {\em COLING}.
+
+\bibitem[Yimam et~al., 2016]{Yimam:2016aa}
+Yimam, S.~M., Biemann, C., Majnaric, L., {\v S}abanovi{\'c}, {\v S}., and
+  Holzinger, A. (2016).
+\newblock An adaptive annotation approach for biomedical entity and relation
+  recognition.
+\newblock {\em Brain Informatics}, 3(3):157--168.
+
+\bibitem[Yoon et~al., 2017]{yoon}
+Yoon, S., Yun, H., Kim, Y., Park, G., and Jung, K. (2017).
+\newblock Efficient transfer learning schemes for personalized language
+  modeling using recurrent neural network.
+\newblock {\em CoRR}, abs/1701.03578.
+
+\bibitem[Zhao, 2017]{zhao}
+Zhao, W. (2017).
+\newblock Deep active learning for short-text classification.
+\newblock Master's thesis, KTH, School of Computer Science and Communication
+  (CSC).
+
+\bibitem[Zliobaite, 2010]{concept}
+Zliobaite, I. (2010).
+\newblock Learning under concept drift: an overview.
+\newblock {\em CoRR}, abs/1010.4784.
+
+\bibitem[Zoph et~al., 2016]{zoph}
+Zoph, B., Yuret, D., May, J., and Knight, K. (2016).
+\newblock Transfer learning for low-resource neural machine translation.
+\newblock {\em CoRR}, abs/1604.02201.
+
+\end{thebibliography}

@@ -21,7 +21,7 @@ flags.DEFINE_float('drop_prob'         , 0.5           , '')
 flags.DEFINE_float('learning_rate'       , 0.001         , 'learning rate for the optimizer')
 flags.DEFINE_string('optimizer'          , 'Adam'        , 'Name of the train source file')
 flags.DEFINE_integer('batch_size'        , 100            , 'random seed for training sampling')
-flags.DEFINE_integer('print_every' , 1000 				, 	'print records every n iteration') 
+flags.DEFINE_integer('print_every' , 1 				, 	'print records every n iteration') 
 flags.DEFINE_integer('iterations' , 10000 				, 'number of iterations to train')
 flags.DEFINE_string('model_dir'          		, 'checkpoints' , 'Directory where to save the model')
 
@@ -313,7 +313,7 @@ def supervisedLearning(datasetPath, datasetSize, transferMethod = None, transfer
     size = datasetSize
     epoch = 5
     # iterations = int(round(size * epoch / FLAGS.batch_size))
-    iterations = 1
+    iterations = 4
 
     # var_list = checkpoint_utils.list_variables('checkpoints')
     # for v in var_list: print(v)
@@ -322,11 +322,11 @@ def supervisedLearning(datasetPath, datasetSize, transferMethod = None, transfer
     print_inputs = tf.train.LoggingTensorHook(['source', 'target', 'predict'], every_n_iter=FLAGS.print_every,
             formatter=data.get_formatter(['source', 'target', 'predict']))
 
-    estimator = tf.estimator.Estimator(model_fn = model.make_graph, model_dir="checkpointsQuoraMSR")
-    estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
+    # estimator = tf.estimator.Estimator(model_fn = model.make_graph, model_dir="checkpointsQuoraMSR")
+    # estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
 
     # modelInfer = Seq2seq(data.vocab_size, FLAGS, transferMethod, sourceCheckpointPath, False, inferGraph = 1)    
-    # estimator = tf.estimator.Estimator(model_fn = model.make_graph, model_dir="data/checkpointsQuoraMSCOCO")
+    estimator = tf.estimator.Estimator(model_fn = model.make_graph, model_dir="data/checkpointsQuoraMSCOCO")
     model.setLoadParameters(False)
 
     test_fn = data.make_test_fn()
@@ -347,7 +347,7 @@ def supervisedLearning(datasetPath, datasetSize, transferMethod = None, transfer
 
     data.builtTranslationCorpus(test_paraphrases)
     scr = evaluate(data.reference_corpus, data.translation_corpus)
-    print(data.translation_corpus)
+    # print(data.translation_corpus)
     print(scr)
     saveResult(100, scr, resultPath)
 

@@ -1,0 +1,380 @@
+\documentclass[12pt,final,twoside]{report}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Some credits:
+% The template initially was created by Prof. Dr. Holger Karl/Uni Paderborn '2006
+% and was expanded and updated by 
+% - Stefan Heinrich/Uni Paderborn/Uni Hamburg since 2008,
+% - Sven Magg/Uni Hamburg since 2013.
+% Suggestions for changes are always welcome.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Meta information:
+\newcommand{\trtitle}{Adaptive Learning Strategies for Neural Paraphrase Generation}
+\newcommand{\trtype}{Master Thesis} %{Bachelorthesis} %{Diplomarbeit} %{Dissertation}
+\newcommand{\trcourseofstudies}{Intelligent Adaptive Systems} %{Bioinformatik} %{Intelligent Adaptive Systems} 
+\newcommand{\trauthor}{Ethem Can Karaoguz}
+\newcommand{\trauthordegree}{} %{\ B.Sc.}
+\newcommand{\tremail}{4karaoguz@informatik.uni-hamburg.de}
+\newcommand{\trmatrikelnummer}{6641214}
+\newcommand{\trgutachterA}{\href{mailto:beimann@informatik.uni-hamburg.de}{Prof.Dr.Chris Beimann}}
+\newcommand{\trgutachterB}{\href{mailto:yimam@informatik.uni-hamburg.de, milde@informatik.uni-hamburg.de}{Seid Muhie Yimam, Benjamin Milde}}
+%\newcommand{\trbetreuung}{\href{mailto:tbd@informatik.uni-hamburg.de}{Dipl.-Inform. To Be Defined}}
+\newcommand{\trfach}{Language Technology}
+\newcommand{\trdate}{22.08.2018}
+\newcommand{\trkeywords}{Learning, Language, NLP, Deep Learning}
+%Optionally: it is also allowed to provide a street name on the
+%\newcommand{\trstrasse}{Streetname 42}
+%\newcommand{\trort}{22527 Hamburg}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Languages:
+
+% Falls die Ausarbeitung in Deutsch erfolgt:
+% \usepackage[german]{babel}
+% \usepackage[T1]{fontenc}
+% \usepackage[latin1]{inputenc}
+% \usepackage[latin9]{inputenc}                     
+% \selectlanguage{german}
+
+% If the thesis is written in English:
+\usepackage[english]{babel}                         
+\selectlanguage{english}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Bind packages:
+\usepackage{acronym}                    % Acronyms
+\usepackage{algorithmic}                % Algorithms and Pseudocode
+\usepackage{algorithm}                  % Algorithms and Pseudocode
+\usepackage{amsfonts}                   % AMS Math Packet (Fonts)
+\usepackage{amsmath}                    % AMS Math Packet
+\usepackage{amssymb}                    % Additional mathematical symbols
+\usepackage{amsthm}
+\usepackage{adjustbox}
+\usepackage{booktabs}                   % Nicer tables
+%\usepackage[font=small,labelfont=bf]{caption} % Numbered captions for figures
+\usepackage{color}                      % Enables defining of colours via \definecolor
+\definecolor{uhhRed}{RGB}{226,0,26}     % Official Uni Hamburg Red
+\definecolor{uhhGrey}{RGB}{136,136,136} % Official Uni Hamburg Grey
+\definecolor{uhhLightGrey}{RGB}{220, 220, 220}
+\usepackage{fancybox}                   % Put equations in a frame
+\usepackage{fancyhdr}                   % Packet for nicer headers
+%\usepackage{fancyheadings}             % Nicer numbering of headlines
+\usepackage[body={5.8in,9in}]{geometry} % Type area (size, margins...)
+
+%\geometry{a4paper,outer=3.35cm}        % !!!Release version (Normal margins)
+%\geometry{a4paper,outer=2.5cm}         % !!!Print version (Additional margin on the left for the binding)
+%\geometry{a4paper}                     % !!!Proofread version (Additional margin on the right for corrections)
+\geometry{a4paper,outer=3.134cm}        % !!!Draft version (Same margins on left and right)
+%\geometry{paperheight=10.0in,paperwidth=6.4in,top=0.51in,left=0.3in}  % !!!Developer version (Minimal margins)
+
+\usepackage{graphicx}                   % Inclusion of graphics
+%\usepackage{latexsym}                  % Special symbols
+\usepackage{longtable}                  % Allow tables over several parges
+\usepackage{listings}                   % Nicer source code listings
+\usepackage{multicol}                   % Content of a table over several columns
+\usepackage{multirow}                   % Content of a table over several rows
+\usepackage{rotating}                   % Alows to rotate text and objects
+%\usepackage{siunitx}					% Nicer display of units and number according to SI standards
+%\sisetup{tight-spacing=true}  
+\usepackage[hang]{subfigure}            % Allows to use multiple (partial) figures in a fig
+%HINT: subfigure may be depricated already - maybe try subfig instead 
+%\usepackage[font=footnotesize,labelfont=rm]{subfig}    % Pictures in a floating environment
+\usepackage{tabularx}                   % Tables with fixed width but variable rows
+\usepackage{url,xspace,boxedminipage}   % Accurate display of URLs
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PDF Information und Definitions:
+\author{\trauthor}
+
+\ifx\pdftexversion\undefined
+\usepackage{hyperref}
+\else
+\usepackage[colorlinks=false,           % link is colores (true) or has colored frame (false)
+            linkcolor=uhhRed,           % case colorlinks=true: define color.
+            urlcolor=uhhRed,
+            citecolor=uhhRed,
+            bookmarks,                  % Place bookmarks erstellen
+            bookmarksopen=true,         % Bookmarks will be shown at start (true/false)
+            pdfpagemode=UseOutlines,    
+            bookmarksopenlevel=1,       % Define the depth of shown links
+            bookmarksnumbered,          % Numbers of chapers in Bookmarks
+            pdftitle={\trtitle},
+            pdfsubject={\trtype},
+            pdfkeywords={\trkeywords},
+            pdfauthor={\trauthor},
+            plainpages=false
+            ]{hyperref}
+\fi
+
+\ifx\pdftexversion\undefined
+\else
+\pdfoutput=1                            % Disable PDF-Output
+\pdfimageresolution=1200
+\pdfcompresslevel=2                     % 0 = no compression, 9 = strongest compression
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Configurationen:
+
+\hyphenation{whe-ther}                  % Manually use: "\-" in a word: Staats\-ver\-trag
+
+%\lstloadlanguages{C}                   % Set the default language for listings
+\DeclareGraphicsExtensions{.pdf,.svg,.jpg,.png,.eps} % first try pdf, then eps, png and jpg
+\graphicspath{{./src/}}                 % Path to a folder where all pictures are located
+\pagestyle{fancy}                       % Use nicer header and footer
+
+% Redefine the environments for floating objects:
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{4}
+\renewcommand{\topfraction}{0.9}        %Standard: 0.7
+\renewcommand{\bottomfraction}{0.5}     %Standard: 0.3
+\renewcommand{\textfraction}{0.1}       %Standard: 0.2
+\renewcommand{\floatpagefraction}{0.8}  %Standard: 0.5
+
+% Tables with a nicer padding:
+\renewcommand{\arraystretch}{1.2}
+
+% Chapter and Sections will not be written in capitals
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername \ \thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+
+% Avoid french spacing (double spacing after a full stop)
+\frenchspacing
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Additional 'theorem' and 'definition' blocks:
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+%\newtheorem{theorem}{Satz}[chapter]    % Wenn in Deutsch geschrieben wird.
+\newtheorem{axiom}{Axiom}[chapter]     
+%\newtheorem{axiom}{Fakt}[chapter]      % Wenn in Deutsch geschrieben wird.
+%Usage:%\begin{axiom}[optional description]%Main part%\end{fakt}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+
+%Additional types of axioms:
+\newtheorem{lemma}[axiom]{Lemma}
+\newtheorem{observation}[axiom]{Observation}
+
+%Additional types of definitions:
+\theoremstyle{remark}
+%\newtheorem{remark}[definition]{Bemerkung} % Wenn in Deutsch geschrieben wird.
+\newtheorem{remark}[definition]{Remark} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Provides TODOs within the margin:
+\newcommand{\TODO}[1]{\marginpar{\emph{\small{{\bf TODO: } #1}}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Abbreviations and mathematical symbols
+\newcommand{\modd}{\text{ mod }}
+\newcommand{\RS}{\mathbb{R}}
+\newcommand{\NS}{\mathbb{N}}
+\newcommand{\ZS}{\mathbb{Z}}
+\newcommand{\dnormal}{\mathit{N}}
+\newcommand{\duniform}{\mathit{U}}
+
+\newcommand{\erdos}{Erd\H{o}s}
+\newcommand{\renyi}{-R\'{e}nyi}
+% it is recommented to define complex terms as expression/newcommand and use the expression in the tex instead.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Document:
+
+\begin{document}
+
+\pagenumbering{Roman}                   % Roman pagenumbering for lists and meta pages
+\renewcommand{\headheight}{14.5pt}      % Size of headings
+
+\thispagestyle{empty}
+\fancyhead[LO,RE]{}                     % Define the header style for the meta pages
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Cover sheet
+
+\begin{titlepage}
+%---Possibility 1:
+    \begin{flushleft}
+        \includegraphics[width=67mm, scale =1.5]{uhhLogoL.pdf}\\
+    \end{flushleft}
+    \rule{\textwidth}{0.4pt}
+        \newline
+        \vspace{2.0cm}
+        \begin{center}
+          \LARGE \textbf{\trtitle}
+        \end{center}
+    \vspace{2.0cm}
+    \begin{center}
+      \textbf{\trtype}\\
+      %im Arbeitsbereich \trfach\\
+      at Research Group \trfach\\
+      \trgutachterA\medskip\\
+      %Fachbereich Informatik\\
+      Department of Informatics\\
+      %MIN-Fakult\"at\\
+      MIN-Faculty\\
+      Universit\"at Hamburg \\[1.0cm] %not allowed to translate Universit{\"a}t Hamburg
+      %vorgelegt von \\
+      submitted by \\
+      \textbf{\href{mailto:\tremail}{\trauthor\trauthordegree}}\\
+      %Studiengang:   \trcourseofstudies \\
+      Course of study:   \trcourseofstudies \\
+      Matrikelnr.:  \trmatrikelnummer \\
+      %a\\
+      on\\
+      \trdate
+    \end{center}
+    \vspace{2cm}
+    \begin{center}
+    \begin{tabular}{ll}
+    %Gutachter: & \trgutachterA \\
+    Examiners: & \trgutachterA \\
+                   & \trgutachterB \\
+    %Betreuung: & \trbetreuung \\    	% Adviser are not allowed to demand getting mentioned here, but are happy getting credited by student's initiative
+    \end{tabular}
+    \end{center}
+    \vfill
+%    \begin{tabular}{l}
+%    \trauthor \\
+%    Matrikelnummer:  \trmatrikelnummer \\
+%    \trstrasse \\
+%    \trort
+%    \end{tabular}
+%    \newline
+    \rule{\textwidth}{0.4pt}
+    \newpage 
+\end{titlepage}
+
+    %backsite of cover sheet is empty!
+\thispagestyle{empty}
+\hspace{1cm}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Abstract:
+\section*{Abstract}\label{sec:abstract}
+%\fancyhead[LE,RO]{\it Abstract}
+%\addcontentsline{toc}{chapter}{\numberline{}Abstract}
+	
+
+
+%% If the abstract ist not longer than half a page, then the German Zusammenfassung can be places on the same page
+%%\cleardoublepage
+%\vfill
+%\section*{Zusammenfassung}\label{sec:zusammenfassung}
+%%\addcontentsline{toc}{chapter}{\numberline{}Zusammenfassung} %Add the Zusammenfassung to the TOC
+%Hier die deutsche Zusammenfassung einf\"ugen (notwendig).
+%\fancyhead[LE,RO]{\it Abstract}
+
+%\cleardoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Lists:
+%\setcounter{tocdepth}{1}               % depth of the table of contents (for BSc and MSc Thesis 1 is recommented)
+\fancyhead[LE,RO]{\it Contents}
+\tableofcontents
+\cleardoublepage
+% List of Figures and List of tables are optional. -> Not needed in most theses.
+\fancyhead[LE,RO]{\it List of Figures}
+\listoffigures
+%\cleardoublepage
+\fancyhead[LE,RO]{\it List of Tables}
+\listoftables
+%\cleardoublepage
+%\lstlistoflistings
+%\cleardoublepage
+
+\fancyhead[LE]{\it \leftmark}           % Define the header style for the text pages
+\fancyhead[RO]{\it \rightmark}          % Define the header style for the text pages
+\fancyhead[LO,RE]{}                     % Define the header style for the text pages
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The content will be included here:
+\pagenumbering{arabic}
+
+\input{1introduction.tex}
+
+\input{2methods.tex}
+
+\input{3approach.tex}
+
+\input{4results.tex}
+
+\input{5conclusion.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Appendices:
+%% these are optional! For most Bachelor-theses and some Master-thesis none of them is needed. 
+%% Just comment them if not needed.
+%\appendix
+%\fancyhead[LO,RE]{}                      % Define the header style for the appendixpages
+%
+%\fancyhead[LE,RO]{\it Anhang A. Nomenclature}                %Adapt letter!
+%  \input{appA.tex}
+%\cleardoublepage
+%
+%\fancyhead[LE,RO]{\it Anhang B. Additional Proofs}            %Adapt letter!
+%  \input{appB.tex}
+%\cleardoublepage
+%
+%\fancyhead[LE,RO]{\it Anhang C. Complete Simulation Results}%Adapt letter!
+%  \input{appC.tex}
+%\cleardoublepage
+
+% ... add as much appendices as you need (one can also add source code, for example)
+
+%\fancyhead[LE]{\it \leftmark}
+%\chapter{}
+\fancyhead[LE,RO]{\it Bibliography}       % A bibliography never have a letter or numbering!
+    \bibliographystyle{apalike}             % Style for presenting the literature
+	\phantomsection\addcontentsline{toc}{chapter}{Bibliography}% Add to the TOC
+    \bibliography{thesis}
+%\cleardoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Formal page 1
+\vspace{2cm}
+\chapter*{Erkl\"arung der Urheberschaft}
+\label{sec:urheber}
+\fancyhead[LE]{\it Erkl\"arung der Urheberschaft}
+	Hiermit versichere ich an Eides statt, dass ich die vorliegende
+	\trtype{} im Studiengang \trcourseofstudies{}
+	selbstst{\"a}ndig verfasst und keine anderen als die angegebenen
+	Hilfsmittel - insbesondere keine im Quellenverzeichnis nicht
+	benannten Internet-Quellen – benutzt habe. Alle Stellen, die
+	w{\"o}rtlich oder sinngem{\"a}{\ss} aus Ver{\"o}ffentlichungen entnommen wurden,
+	sind als solche kenntlich gemacht. Ich versichere weiterhin, dass
+	ich die Arbeit vorher nicht in einem anderen Pr{\"u}fungsverfahren
+	eingereicht habe und die eingereichte schriftliche Fassung der
+	auf dem elektronischen Speichermedium entspricht.
+	
+\vspace{4cm}
+\noindent Ort, Datum \hfill Unterschrift
+
+%The backcover is always empty
+\newpage
+\thispagestyle{empty}
+\hspace{1cm}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Formal page 2
+\vspace{2cm}
+\chapter*{Erkl\"arung zur Ver\"offentlichung}
+\label{sec:urheber}
+\fancyhead[LE]{\it Erkl\"arung zur Ver\"offentlichung}
+Ich stimme der Einstellung der \trtype{} in die Bibliothek des Fachbereichs Informatik zu.
+
+\vspace{4cm}
+\noindent Ort, Datum \hfill Unterschrift
+
+%The backcover is always empty
+\newpage
+\thispagestyle{empty}
+\hspace{1cm}
+\newpage
+
+\end{document}
+%EOF
+
