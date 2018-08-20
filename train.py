@@ -303,7 +303,7 @@ def supervisedLearning(datasetPath, datasetSize, transferMethod = None, transfer
     resultPath = datasetPath + "SL"
 
     if(transferMethod is None):
-        vocabulary = datasetPath + "v.txt"
+        vocabulary = datasetPath + "quora_msr_vocabulary.txt"
     else:
         vocabulary = transferVocabularyPath
 
@@ -326,7 +326,7 @@ def supervisedLearning(datasetPath, datasetSize, transferMethod = None, transfer
     # estimator.train(input_fn=input_fn, hooks=[tf.train.FeedFnHook(feed_fn), print_inputs], steps=iterations)
 
     # modelInfer = Seq2seq(data.vocab_size, FLAGS, transferMethod, sourceCheckpointPath, False, inferGraph = 1)    
-    estimator = tf.estimator.Estimator(model_fn = model.make_graph, model_dir="data/checkpointsQuoraMSCOCO")
+    estimator = tf.estimator.Estimator(model_fn = model.make_graph, model_dir="data/cps/checkpointsQuoraMSRinit")
     model.setLoadParameters(False)
 
     test_fn = data.make_test_fn()
@@ -347,7 +347,7 @@ def supervisedLearning(datasetPath, datasetSize, transferMethod = None, transfer
 
     data.builtTranslationCorpus(test_paraphrases)
     scr = evaluate(data.reference_corpus, data.translation_corpus)
-    # print(data.translation_corpus)
+    print(data.translation_corpus)
     print(scr)
     saveResult(100, scr, resultPath)
 
@@ -356,7 +356,7 @@ def main(argv):
     # tf.logging._logger.setLevel(logging.INFO)
     logging.getLogger("tensorflow").setLevel(logging.INFO)
 
-    datasetPath = 'data/quora/'
+    datasetPath = 'data/msr/'
     #datasetPath = 'data/quora/'
     # datasetPath = 'data/ppdb-lexical/'
     msrSize = 2753
@@ -377,7 +377,7 @@ def main(argv):
     # trainWithPreviousKnowledgePool(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
     # trainWithoutPreviousKnowledge(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
     # supervisedLearning(datasetPath, msrSize, "scheme3", datasetPath + "quora_msr_vocabulary.txt", "checkpoints", suffix = "scheme3")
-    supervisedLearning(datasetPath, quoraSize)
+    supervisedLearning(datasetPath, msrSize)
 
 
 if __name__ == "__main__":

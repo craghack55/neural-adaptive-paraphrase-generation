@@ -1,18 +1,19 @@
 \select@language {english}
 \select@language {english}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {1.1}{\ignorespaces Human in the loop data acquisition}}{3}{figure.1.1}
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Human in the loop data acquisition.}}{3}{figure.1.1}
 \contentsline {figure}{\numberline {1.2}{\ignorespaces An interactive human-in-the-loop application for text simplification \cite {par4sim}. Target words to be simplified are highlighted and user is provided with a list of candidate words to choose from. Candidate words are generated and ranked by the system/model.}}{4}{figure.1.2}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Recurrent neural network expanding through time steps \cite {zhao}}}{11}{figure.2.1}
-\contentsline {figure}{\numberline {2.2}{\ignorespaces A typical LSTM cell \cite {paszke}}}{12}{figure.2.2}
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Sequence to sequence learning with encoder-decoder framework}}{13}{figure.2.3}
-\contentsline {figure}{\numberline {2.4}{\ignorespaces Idea behind transfer learning}}{14}{figure.2.4}
-\contentsline {figure}{\numberline {2.5}{\ignorespaces Pool based active learning scheme}}{15}{figure.2.5}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Recurrent neural network expanding through time steps \cite {zhao}.}}{11}{figure.2.1}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces A typical LSTM cell \cite {paszke}.}}{12}{figure.2.2}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Sequence to sequence learning with encoder-decoder framework.}}{13}{figure.2.3}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Idea behind transfer learning.}}{14}{figure.2.4}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Pool based active learning scheme.}}{15}{figure.2.5}
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {3.1}{\ignorespaces Stacked LSTM based model \cite {Prakashetal}}}{17}{figure.3.1}
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Incremental learning with data pooling. The model uses data from all prevous iterations, hyperparameters re-initialized and weights are transferred through iterations.}}{20}{figure.3.2}
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Incremental learning without data pooling. The model only uses data from latest iteration, hyperparameters re-initialized and weights are transferred through iterations.}}{21}{figure.3.3}
-\contentsline {figure}{\numberline {3.4}{\ignorespaces Incremental learning baseline. The model is trained from scratch for each iteration, no knowledge transfer involved.}}{23}{figure.3.4}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Incremental learning with data pooling (IL1). The model uses data from all prevous iterations, hyperparameters re-initialized and weights are transferred through iterations.}}{20}{figure.3.2}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Incremental learning without data pooling (IL2). The model only uses data from latest iteration, hyperparameters re-initialized and weights are transferred through iterations.}}{22}{figure.3.3}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Incremental learning baseline (IL3). The model is trained from scratch for each iteration, no knowledge transfer involved.}}{23}{figure.3.4}
+\addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

@@ -130,7 +130,7 @@ def createNGramSampling(source_file, target_file):
 			a = list(ngrams(l, i))
 			total += len(a)
 			for g in a:
-				if(n_grams[g] < A):
+				if(n_grams[g] >= A):
 					ng.append(g)
 
 		score = len(ng) / total
@@ -138,8 +138,8 @@ def createNGramSampling(source_file, target_file):
 
 	sentencesAndScores = sorted(sentencesAndScores, key=itemgetter(2))
 
-	source = open("ngram_train_source.txt", "w") 
-	target = open("ngram_train_target.txt", "w")
+	source = open("r_ngram_train_source.txt", "w") 
+	target = open("r_ngram_train_target.txt", "w")
 
 	for i in sentencesAndScores:
 		source.write(i[0] + '\n')
@@ -177,7 +177,7 @@ def buildVocabulary(source_files, output_filename):
 
 if __name__ == "__main__":
 	#createNGramSampling("data/quora/train_source.txt", "data/quora/train_target.txt")
-	buildIterationsPool("data/quora/ngram_train_source.txt", "data/quora/ngram_train_target.txt", 119445, "data/quora/")
+	buildIterationsPool("data/quora/r_ngram_train_source.txt", "data/quora/r_ngram_train_target.txt", 119445, "data/quora/")
 	# nltk.download('punkt')
 	# source_files = "data/glove.6B/glove.6B.50d.txt"
 	# source_files = ["data/mscoco/train_source.txt", "data/quora/train_source.txt", "data/mscoco/train_target.txt", "data/quora/train_target.txt"]

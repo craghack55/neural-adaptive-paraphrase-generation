@@ -55,6 +55,17 @@ Lin, T., Maire, M., Belongie, S.~J., Bourdev, L.~D., Girshick, R.~B., Hays, J.,
 \newblock Microsoft {COCO:} common objects in context.
 \newblock {\em CoRR}, abs/1405.0312.
 
+\bibitem[Madhyastha and Espa{\~{n}}a{-}Bonet, 2016]{ofw}
+Madhyastha, P.~S. and Espa{\~{n}}a{-}Bonet, C. (2016).
+\newblock Resolving out-of-vocabulary words with bilingual embeddings in
+  machine translation.
+\newblock {\em CoRR}, abs/1608.01910.
+
+\bibitem[Mikolov et~al., 2013]{mikolov}
+Mikolov, T., Chen, K., Corrado, G., and Dean, J. (2013).
+\newblock Efficient estimation of word representations in vector space.
+\newblock {\em CoRR}, abs/1301.3781.
+
 \bibitem[Mou et~al., 2016]{mou}
 Mou, L., Meng, Z., Yan, R., Li, G., Xu, Y., Zhang, L., and Jin, Z. (2016).
 \newblock How transferable are neural networks in {NLP} applications?
@@ -82,6 +93,12 @@ Pavlick, E., Ganitkevitch, J., Rastogi, P., Durme, B.~V., and Callison-Burch,
 \newblock Ppdb 2.0: Better paraphrase ranking, fine-grained entailment
   relations, word embeddings, and style classification.
 \newblock In {\em ACL}.
+
+\bibitem[Pennington et~al., 2014]{glove}
+Pennington, J., Socher, R., and Manning, C.~D. (2014).
+\newblock Glove: Global vectors for word representation.
+\newblock In {\em Empirical Methods in Natural Language Processing (EMNLP)},
+  pages 1532--1543.
 
 \bibitem[Prakash et~al., 2016]{Prakashetal}
 Prakash, A., Hasan, S.~A., Lee, K., Datla, V.~V., Qadir, A., Liu, J., and
