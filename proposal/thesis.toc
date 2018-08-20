@@ -1,7 +1,7 @@
 \select@language {english}
 \select@language {english}
 \contentsline {chapter}{\numberline {1}Introduction}{2}{chapter.1}
-\contentsline {section}{\numberline {1.1}Thesis Organization}{6}{section.1.1}
+\contentsline {section}{\numberline {1.1}Thesis Organization}{5}{section.1.1}
 \contentsline {section}{\numberline {1.2}Research Questions}{6}{section.1.2}
 \contentsline {section}{\numberline {1.3}Related Work}{7}{section.1.3}
 \contentsline {chapter}{\numberline {2}Methods}{10}{chapter.2}

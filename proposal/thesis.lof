@@ -10,7 +10,7 @@
 \contentsline {figure}{\numberline {2.4}{\ignorespaces Idea behind transfer learning.}}{14}{figure.2.4}
 \contentsline {figure}{\numberline {2.5}{\ignorespaces Pool based active learning scheme.}}{15}{figure.2.5}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Stacked LSTM based model \cite {Prakashetal}}}{17}{figure.3.1}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Stacked LSTM based model \cite {Prakashetal}.}}{17}{figure.3.1}
 \contentsline {figure}{\numberline {3.2}{\ignorespaces Incremental learning with data pooling (IL1). The model uses data from all prevous iterations, hyperparameters re-initialized and weights are transferred through iterations.}}{20}{figure.3.2}
 \contentsline {figure}{\numberline {3.3}{\ignorespaces Incremental learning without data pooling (IL2). The model only uses data from latest iteration, hyperparameters re-initialized and weights are transferred through iterations.}}{22}{figure.3.3}
 \contentsline {figure}{\numberline {3.4}{\ignorespaces Incremental learning baseline (IL3). The model is trained from scratch for each iteration, no knowledge transfer involved.}}{23}{figure.3.4}
