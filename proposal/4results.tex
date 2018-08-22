@@ -1,6 +1,6 @@
 \chapter{Results}\label{results}
 
-This chapter reports the results of experiments done with the proposed learning strategies and discusses the findings. First, evaluations of each strategy are given separately followed by the experiments which evaluates the combinations of different strategies. At the end, an overall discussion of the results is given.
+This chapter reports the results of experiments done with the proposed learning strategies and discusses the findings. First, evaluations of each strategy are given separately followed by the experiments which evaluate the combinations of different strategies. At the end, an overall discussion of the results is given.
 
 \begin{table}[t]
 \centering
@@ -13,22 +13,22 @@ This chapter reports the results of experiments done with the proposed learning 
  \hline
   IL2 & 0.07 & 0.15 & 0.21 & 0.47 & 0.77 & 0.99 & 1.04 & 1.19 & 1.16 \\ 
  \hline
- Baseline & \textbf{0.12} & 0.27 & 0.6 & 1.32 & 0.96 & 1.08 & 1.24 & 1.26 & 1.34 \\ 
+ IL3 & \textbf{0.12} & 0.27 & 0.6 & 1.32 & 0.96 & 1.08 & 1.24 & 1.26 & 1.34 \\ 
  \hline
  SL & - & - & - & - & - & - & - & - & 0.09  \\ 
  \hline
 \end{tabular}
-\caption{BLEU scores of incremental learning on the MSR dataset. Each column represents an iteration, first row shows what percent of the dataset is used in that iteration. Each row except the last represents the performance of a particular learning strategy which is described in Chapter 3. The last row represents the results from \cite{brad}.}
+\caption{BLEU scores of incremental learning on the MSR dataset. Each column represents an iteration, first row shows what percent of the dataset is used in that iteration. Each row except the last represents the performance of a particular learning strategy which is described in \ref{incs}. The last row represents the results from \cite{brad}.}
 \label{table:4.1}
 \end{table}
 
 \section{Neural Paraphrase Generation with Incremental Learning}
 
-Table 4.1 presents the results of incremental learning strategies on the MSR dataset. The model is highly sensitive to parameter tuning, failing to converge with high learning rates. The model is trained on a validation set with different hyperparameter configurations, mainly with different dropout probabilities and learning rates, and the configuration with the best performance is used in the experiments. As it can be seen from the table, the model performs very poorly, achieving a BLEU score of 1.34 with traditional supervised learning. This poor performance might be related to the dataset's small size and high complexity. Moreover a result from \cite{brad} is also reported in order to reinforce the difficulty of MSR dataset. Their model achieved a BLEU score of 0.09 on the MSR dataset with supervised learning. 
+Table 4.1 presents the results of incremental learning strategies on the MSR dataset. The model is highly sensitive to parameter tuning, failing to converge with high learning rates. The model is trained on a validation set with different hyperparameter configurations, mainly with different dropout probabilities and learning rates. The configuration with the best performance is used in the experiments. This parameter tuning is done with supervised learning. As it can be seen from the table, the model performs very poorly, achieving a BLEU score of 1.34 with traditional supervised learning. This poor performance might be related to the dataset's small size and high complexity. Moreover a result from \cite{brad} is also reported in order to reinforce the difficulty of MSR dataset. Their model achieved a BLEU score of 0.09 on the MSR dataset with supervised learning. 
 
-Incremental learning with and without data pooling achieve BLEU scores of 1.41 and 1.16 respectively. It can be seen that all of the learning strategies including the baseline, seem to improve over time increasing their performance in a steady fashion at every iteration even though there are anomalies in baseline and incremental learning with data pooling, at the 4th iteration with 50 percent of the data. It is also observed that when trained with data pooling in an incremental manner, the model performs slightly better than supervised learning. Nevertheless the model fails to generate meaningful and grammatically correct paraphrases in every case.
+Incremental learning with and without data pooling achieve BLEU scores of 1.41 and 1.16 respectively. It can be seen that all of the learning strategies including the baseline, seem to improve over time, increasing their performance in a steady fashion at every iteration even though there are anomalies in baseline and incremental learning with data pooling, at the 4th iteration with 50 percent of the data. It is also observed that when trained with data pooling in an incremental manner, the model performs slightly better than supervised learning. Nevertheless the model fails to generate meaningful and grammatically correct paraphrases in every case.
 
-Even though a clear pattern through iterations can be seen, the results of this experiment is not conclusive due to model's very poor performance. Moreover the high variance between different runs highly suggest that the results are not meaningful and the neural network is basically modelling noise. Each learning strategy has been run 3 times and the variance of the best performing learning strategy which is the incremental learning with data pooling, is 0.617. This a very high number compared to actual BLEU scores achieved by the model. 
+Even though a clear pattern through iterations can be seen, the results of this experiment is not conclusive due to model's very poor performance. Moreover the high variance between different runs highly suggests that the results are not meaningful and the neural network is basically modelling noise. Each learning strategy has been run 3 times and the variance of the best performing learning strategy which is the incremental learning with data pooling, is 0.617. This a very high number compared to actual BLEU scores achieved by the model. 
 
 At the end it is clear that generating coherent paraphrases for MSR dataset is impractical if it is not impossible for our model. Moreover it is not applicable to human-in-the-loop setting since it basically produces noise in early iterations. This severely undermines the involvement of model with the data acquisition process, in other words the model is unable to make meaningful suggestions to the user.
 
@@ -43,16 +43,15 @@ At the end it is clear that generating coherent paraphrases for MSR dataset is i
  \hline
   IL2 &  \textbf{10.68} & 17.58 & 18.79 & 19.06 & 19.50 & 19.46 & 19.35 & 19.54 & 19.70 \\ 
  \hline
- Baseline & 7.93 & 15.37 & 17.58 & 19.73 & 21.20 & 21.63 & 22.49 & 23.12 & 23.43 \\ 
+ IL3 & 7.93 & 15.37 & 17.58 & 19.73 & 21.20 & 21.63 & 22.49 & 23.12 & 23.43 \\ 
  \hline
  SL & - & - & - & - & - & - & - & - & 22.90  \\ 
  \hline
 \end{tabular}
-\caption{BLEU scores of incremental learning on the QUORA dataset. Each column represents an iteration, first row shows what percent of the dataset is used in that iteration. Each row except the last represents the performance of a particular learning strategy which is described in Chapter 3. The last row represents the results from \cite{Guptaetal}.}
-\label{table:4.2}
+\caption{BLEU scores of incremental learning on the QUORA dataset. Each column represents an iteration, first row shows what percent of the dataset is used in that iteration. Each row except the last represents the performance of a particular learning strategy which is described in \ref{incs}. The last row represents the results from \cite{Guptaetal}.} \label{table:incrementalQuora}
 \end{table}
 
-Table 4.2 presents the results of incremental learning strategies on the QUORA dataset. Other than a small grid search on the validation dataset with supervised learning, no hyperparameter tuning is done on the model during this experiment. As it can be seen from the table, in every case the model performs reasonably well at the end of last iteration. The baseline model with traditional supervised learning achieves a BLEU score of 23.43 and it is able to generate meaningful, grammatically correct paraphrases. The result from \cite{Guptaetal} is also reported. Their model achieved a BLEU score of 22.9 on the QUORA dataset with supervised learning. It is important to state that the training set used in this experiment is slightly larger than the reference work. Additionally a much larger test set is used in this work. Therefore it is not possible to make conclusive statements regarding the comparison of two models. Nevertheless the comparison at least shows that our model performs comparably to the other state-of-the-art approaches.
+Table 4.2 presents the results of incremental learning strategies on the QUORA dataset. Other than a small grid search on the validation dataset with supervised learning, no hyperparameter tuning is done on the model during this experiment. In the table, IL1 represents incremental learning with data pooling where the model is trained continuously with all the data gathered by the system. IL2 represents incremental learning without data pooling where the model is continuously trained with the data gathered in the latest iteration of the system. IL3 represents the baseline incremental learning where the model is retrained from zero for each iteration. As it can be seen from the table, in every case the model performs reasonably well at the end of last iteration. The baseline model with traditional supervised learning achieves a BLEU score of 23.43 and it is able to generate meaningful, mostly grammatically correct paraphrases. The result from \cite{Guptaetal} is also reported. Their model achieved a BLEU score of 22.9 on the QUORA dataset with supervised learning. It is important to state that the training set used in this experiment is slightly larger than the reference work. Additionally a much larger test set is used in this work. Therefore it is not possible to make conclusive statements regarding the comparison of two models. Nevertheless the comparison at least shows that the model performs comparably to the other state-of-the-art approaches.
 
 \begin{table}[t]
 \centering
@@ -68,16 +67,16 @@ Table 4.2 presents the results of incremental learning strategies on the QUORA d
   0.5 & 8.48 & 17.05 & 19.62 & 21.58 & 22.93 & 23.26 & 23.92 & 24.58 & 25.09 \\ 
  \hline
 \end{tabular}
-\caption{BLEU scores of incremental learning with data pooling on the QUORA dataset with different dropout probabilities. Each column except the first represents an iteration, first row shows what percent of the dataset is used in that iteration. First column represents the dropout probabilities.}
+\caption{BLEU scores of incremental learning with data pooling on the QUORA dataset with different dropout probabilities. Each column except the first represents an iteration, first row shows what percent of the dataset is used in that iteration. First column represents the dropout probabilities. The models are evaluated on the test set.}
 \end{table}
 
 Incremental learning with data pooling achieves a BLEU score of 26.19 at the last iteration, outperforming other strategies including supervised learning. Moreover it starts outperforming traditional supervised learning which uses all of the dataset, only with 60 percent of the dataset. The model starts adapting and improves its performance constantly through iterations. Even with using only half of the dataset, the model can provide reasonable paraphrases. 
 
-The comparison between baseline incremental learning and incremental learning with data pooling indicates the reasons why data pooling performs better. From the perspective of individual iterations with both learning strategies, the model trains with the same number of epochs and same amount of data. Only difference between two learning strategies is, in incremental learning with data pooling the model employs transfer learning inside the same dataset by not reinitializing its weights in every iteration contrary to baseline incremental learning. In other words the model that is trained in a particular iteration, is already fine tuned with respect to a specific portion of the dataset. The results show that the model is able to utilize the information gained in the previous iterations.
+The comparison between baseline incremental learning and incremental learning with data pooling can indicate the reasons why data pooling performs better. From the perspective of individual iterations with both learning strategies, the model trains with the same number of epochs and same amount of data. Only difference between two learning strategies is, in incremental learning with data pooling the model employs transfer learning inside the same dataset by not reinitializing its weights in every iteration contrary to baseline incremental learning. In other words the model that is trained in a particular iteration, is already fine tuned with respect to a specific portion of the dataset. The results show that the model is able to utilize the information gained in the previous iterations.
 
-As stated in Chapter 3, the main concern about the incremental learning with data pooling strategy is overfitting to data points which are collected in earlier iterations. Considering how prone the neural models are for overfitting, this would be an expected situation but the results show that the model does not overfit when it is trained incrementally with data pooling. Training error of the model decreases and stabilizes through epochs. It can be hypothesized that the regularization methods that are employed, are preventing the model to overfit and making the learning process stable. In order to confirm this an experiment with different dropout probabilities is done and the model's behaviour in the incremental learning setting is reported. Table 4.3 shows the effect of different dropout probabilities on the incremental learning with data pooling.
+As stated in Chapter 3, the main concern about the incremental learning with data pooling strategy is overfitting to data points which are collected in earlier iterations. Considering how prone the neural models are for overfitting, this would be an expected situation but the results show that the model does not overfit when it is trained incrementally with data pooling. Training error of the model decreases and stabilizes through epochs. It can be hypothesized that the regularization methods that are employed, are preventing the model to overfit and making the learning process stable. In order to confirm this, an experiment with different dropout probabilities is done and the model's behaviour in the incremental learning setting is reported. As it is stated before the model which is used in the previous experiment regarding incremental learning, is already fine tuned with the validation set by using supervised learning. In other words, the parameter configuration which performed best on validation set with supervised learning, is selected for the incremental learning experiments reported in \ref{table:incrementalQuora}. Therefore there is no risk of overfitting to the test set in this experiment even if the model is evaluated on the test set. The model selection process is already done so the test set can be used for analyzing the effect of different dropout probabilities. Table 4.3 shows the effect of different dropout probabilities on the incremental learning with data pooling. The models are evaluated on the test set.
 
-As it can be seen from the table, the model is able to learn with the dropout probabilities of 0.3 and 0.5 while it fails to adapt when there is no dropout. Even though training error decreases steadily in every iteration, the model can not improve on the test set, overfitting over time which is the expected behaviour. The incremental learning baseline is also trained with different dropout probabilities. The results are shown in Table 4.4. As it can be seen from the table, the model does not overfit even though no dropout is used.
+As it can be seen from the table, the model is able to learn with the dropout probabilities of 0.3 and 0.5 while it fails to adapt when there is no dropout. Even though training error decreases steadily in every iteration, the model can not improve on the test set, overfitting over time which is the expected behaviour. The incremental learning baseline is also trained with different dropout probabilities. The results are shown in Table 4.4. As it can be seen from the table, the model manages to improve its' performance on test set even though no dropout is used.
 
 \begin{table}[t]
 \centering
@@ -93,7 +92,7 @@ As it can be seen from the table, the model is able to learn with the dropout pr
   0.5 & 8.19 & 13.34 & 15.33 & 17.09 & 18.36 & 19.05 & 20.09 & 20.94 & 21.54 \\ 
  \hline
 \end{tabular}
-\caption{BLEU scores of incremental learning baseline on the QUORA dataset with different dropout probabilities. Each column except the first represents an iteration, first row shows what percent of the dataset is used in that iteration. First column represents the dropout probabilities.}
+\caption{BLEU scores of incremental learning baseline on the QUORA dataset with different dropout probabilities. Each column except the first represents an iteration, first row shows what percent of the dataset is used in that iteration. First column represents the dropout probabilities. The models are evaluated on the test set.}
 \end{table}
 
 Incremental learning without data pooling achieves a BLEU score of 19.70 at the last iteration. The results show that even though the model improves its BLEU score in first 4 iterations it fails to adapt afterwards achieving similar BLEU scores for last 5 iterations. The model has the highest score in last iteration like the other learning strategies but increase in performance is not notable. Moreover at the last iteration, incremental learning without data pooling performs worse than both incremental learning baseline and incremental learning with data pooling.
@@ -112,12 +111,12 @@ Incremental learning without data pooling achieves a BLEU score of 19.70 at the 
  15 & \textbf{18.96} & 18.07 & 18.47 & 18.46 & 18.87 & 19.05 & 19.11 & 19.15 & 19.19 \\ 
  \hline
 \end{tabular}
-\caption{BLEU scores of incremental learning without data pooling on the QUORA dataset with different number of epochs. Each column except the first represents an iteration, first row shows what percent of the dataset is used in that iteration. First column represents the number of epochs.}
+\caption{BLEU scores of incremental learning without data pooling on the QUORA dataset with different number of epochs. Each column except the first represents an iteration, first row shows what percent of the dataset is used in that iteration. First column represents the number of epochs. The models are evaluated on the test set.}
 \end{table}
 
-When compared to baseline incremental learning, it is easy to see that at the last iteration both models are trained the same number of epochs. The baseline model is outperformed by the model trained with incremental learning without data pooling in the first 3 iterations but starting with the 4th iteration, it begins to outperform the other. This is an expected result because the continuous model has better weight initialization when there is not enough training data for the model to learn properly.
+At the end of the last iteration, both the baseline incremental learning and incremental learning without data pooling have models which are trained the same number of epochs. The baseline model is outperformed by the model trained with incremental learning without data pooling in the first 3 iterations but starting with the 4th iteration, it begins to outperform the other. This is an expected result because the continuous model has better weight initialization when there is not enough training data for the model to learn properly.
 
-Both of the incremental learning strategies that are proposed, use transfer learning in the same dataset only difference being the resources they transfer from. Incremental learning with data pooling not only uses more training data to transfer between iterations, it also updates certain parts of the datasets more. It can be argued that the reason behind the low performance of incremental learning without data pooling is the fact that it is not updating the models' weights enough, hence underfitting to the whole dataset. An experiment with different number of epochs per iteration is done in order to test this theory. The results are shown in Table 4.5.
+Both of the incremental learning strategies that are proposed, use transfer learning in the same dataset only difference being the resources they transfer from. Incremental learning with data pooling not only uses more training data to transfer between iterations, it also updates its' weights towards to certain parts of the datasets more. It can be argued that the reason behind the low performance of incremental learning without data pooling is the fact that it is not updating the model's weights enough, hence underfitting to the whole dataset. An experiment with different number of epochs per iteration is done in order to test this theory. The models are evaluated on the test set. The same argument from the experiments with different dropout probabilities, applies here as well. The results are shown in Table 4.5.
 
 As it can be seen from the table, the number of epochs used in training does not effect the performance significantly. The model trained with number of epochs of 5, 10 and 15, scored BLEU scores of 19.70, 19.69 and 19.82 respectively at the last iteration. Training error analysis of the model clearly shows that the model is able to learn pretty fast since the training error continuously decreases and converges in every case. This might be attributed to size of the training data in each iteration considering the fact that the model can fit itself to the small dataset faster.
 
@@ -140,12 +139,14 @@ As it can be seen from the table, incremental learning performs better than supe
 
 \section{Neural Paraphrase Generation with Transfer Learning}
 
-\begin{table}[t]
+\begin{table}[b]
 \centering
 \small
- \begin{tabular}{|c | c | c |} 
+ \begin{tabular}{|c | c | c |}
  \hline
- Source Dataset & QUORA & PPDB \\ [0.5ex] 
+ \textbf{Transfer Method} & \multicolumn{2}{ c| }{\textbf{Source Dataset}} \\
+ \hline
+  & QUORA & PPDB \\ [0.5ex] 
  \hline
   INIT & 8.9 & \textbf{3.08}  \\ 
  \hline
@@ -160,21 +161,23 @@ As it can be seen from the table, incremental learning performs better than supe
   Supervised Learning & 1.34 & 1.34  \\ 
  \hline
 \end{tabular}
-\caption{BLEU scores of different transfer learning methods on the MSR dataset. First row represents the source datasets. Rest of the rows represent transfer methods and corresponding BLEU scores.}
+\caption{BLEU scores of different transfer learning methods on the MSR dataset. First row represents the source datasets. Rest of the rows represent transfer methods which are described in \ref{transfers} and corresponding BLEU scores.}
 \end{table}
 
 Table 4.7 presents the results of transfer learning on the MSR dataset. QUORA and PPDB-Lexical datasets are used as source datasets. Both source datasets are trained for 10 epochs and with the same hyperparameter configuration. No additional parameter tuning has been done for neither of the settings. Previously fined tuned model configurations which are described in previous section, are used for the target datasets.
 
-As it can be seen from the table, transfer learning improves BLEU score with every transfer method for both source datasets except one particular setting. When transferred from the QUORA dataset, the model improves its BLEU score by 9.7 at the best case which is a very significant improvement since the original model could not produce acceptable paraphrases at all. When transferred from PPDB even though the model is still unable to generate acceptable paraphrases, it improves its BLEU score only by 1.74 at the best case which is an unexpected result. Our results on transfer learning from PPDB-Lexical dataset do not coincide with the results of \cite{brad} where they report a BLEU score of 10.29 for transfer from PPDB-Lexical to MSR. One possible explanation for this inconsistency would be the lack of parameter tuning for source datasets in our experiments. Since the source model for PPDB-Lexical is not fine tuned, it might not perform well in the MSR. Another explanation could be the difference in models used for paraphrase generation task but this explanation is very unlikely since our model is able to generate results that are comparable to state-of-the-art architectures even though it is a fairly simple model. In retrospect, the result that using QUORA dataset as source leading to better performance than using PPDB-Lexical, is not suprising. Even though the PPDB-Lexical dataset is larger, it contains no context information unlike the QUORA dataset. Moreover QUORA and MSR datasets have similar domains (more common words and topics, etc.) which should lead to better performance.
+As it can be seen from the table, transfer learning improves BLEU score with every transfer method for both source datasets except one particular setting. When transferred from the QUORA dataset, the model improves its BLEU score by 9.7 at the best case which is a very significant improvement since the original model could not produce acceptable paraphrases at all. When transferred from PPDB even though the model is still unable to generate acceptable paraphrases, it improves its BLEU score only by 1.74 at the best case which is an unexpected result. Our results on transfer learning from PPDB-Lexical dataset do not coincide with the results of \cite{brad} where they report a BLEU score of 10.29 for transfer from PPDB-Lexical to MSR. One possible explanation for this inconsistency would be the lack of parameter tuning for source datasets in our experiments. Since the source model for PPDB-Lexical is not fine tuned, it might not perform well in the MSR. Another explanation could be the difference in models used for paraphrase generation task but this explanation is very unlikely since our model is able to generate results that are comparable to state-of-the-art architectures even though it is a fairly simple model. In retrospect, the result that using QUORA dataset as source leading to better performance than using PPDB-Lexical, is not surprising. Even though the PPDB-Lexical dataset is larger, it contains no context information unlike the QUORA dataset. Moreover QUORA and MSR datasets have similar domains (more common words and topics, etc.) which should lead to better performance.
 
-The transfer method which performs best for the QUORA dataset is freeze 1 layer. When the QUORA dataset is used as source, rest of the transfer methods performs similarly, INIT improving the BLEU score by 6.52, freeze 2 layers improving by 6.36 and surplus layer by 5.98. For the PPDB-Lexical dataset, the best transfer method is INIT. Freeze 1 layer improves the BLEU score by 1, freeze 2 layers by 1.73 and surplus layer by 1.59. When only the trained word embeddings are transferred, the model improves by 1.04 with the QUORA dataset as source. This result shows that hidden layers are not the only aspect of the model that is transferable. When PPDB-Lexical dataset is used as source, transferring the word embeddings actually hurts the performance. This result is quite inconsistent with other transfer learning experiments and it lacks an explanation.
+The transfer method which performs best for the QUORA to MSR transfer, is freeze 1 layer. When the QUORA dataset is used as source, rest of the transfer methods performs similarly, INIT improving the BLEU score by 6.52, freeze 2 layers improving by 6.36 and surplus layer by 5.98. For the PPDB-Lexical dataset, the best transfer method is INIT. Freeze 1 layer improves the BLEU score by 1, freeze 2 layers by 1.73 and surplus layer by 1.59. When only the trained word embeddings are transferred, the model improves by 1.04 with the QUORA dataset as source. This result shows that hidden layers are not the only aspect of the model that is transferable. When PPDB-Lexical dataset is used as source, transferring the word embeddings actually hurts the performance. This result is quite inconsistent with other transfer learning experiments and it lacks an explanation.
 
 \begin{table}[t]
 \centering
 \small
  \begin{tabular}{|c | c | c |} 
+  \hline
+ \textbf{Transfer Method} & \multicolumn{2}{ c| }{\textbf{Target Dataset}} \\
  \hline
- Target Dataset & QUORA-120K & QUORA-24K \\ [0.5ex] 
+ & QUORA-120K & QUORA-24K \\ [0.5ex] 
  \hline
   INIT & 22.71 & 13.46  \\ 
  \hline
@@ -189,17 +192,17 @@ The transfer method which performs best for the QUORA dataset is freeze 1 layer.
   Supervised Learning & \textbf{23.43} & 10.49  \\ 
  \hline
 \end{tabular}
-\caption{BLEU scores of different transfer learning methods on the QUORA-120K and the QUORA-24K datasets when MSCOCO dataset used as source. First row represents the target datasets. Rest of the rows represent transfer methods and corresponding BLEU scores.}
+\caption{BLEU scores of different transfer learning methods on the QUORA-120K and the QUORA-24K datasets when MSCOCO dataset is used as source. First row represents the target datasets. Rest of the rows represent transfer methods which are described in \ref{transfers} and corresponding BLEU scores.}
 \end{table}
 
-Table 4.8 presents the results of transfer learning on the QUORA dataset from the MSCOCO dataset. Pre-trained source model shares the same hyperparameter configuration with previous source models and it is trained for 10 epochs. The results show that transferring MSCOCO to QUORA dataset is not effective, moreover it decreases the performance. All of the transfer methods perform worse than traditional supervised learning without transfer. Among the transfer methods only INIT has a comparable performance to supervised learning with a BLEU score of 22.21 whereas supervised learning achieves a BLEU score of 22.40. This is an unexpected result since it suggests that MSCOCO dataset has no useful knowledge which can help with the training of QUORA dataset. It can be argued that this is a similar problem to the knowledge forgetting problem which is observed with incremental learning without data pooling. It can be hypothesized that since there is enough training data to learn from, the transferred knowledge is overwritten by the target task. In order to investigate this behaviour better, a subset of QUORA dataset with the size of 24,000 paraphrase pairs are randomly selected and knowledge transfer is applied from the MSCOCO to this subset. The original dataset contains approximately 120,000 paraphrase pairs. Results show that transfer learning performs better in this case, improving the BLEU score by 4.31. All of the transfer methods improve the model's final score and freeze 1 layer approach performs the best.
+Table 4.8 presents the results of transfer learning on the QUORA dataset from the MSCOCO dataset. Pre-trained source model shares the same hyperparameter configuration with previous source models and it is trained for 5 epochs. The results show that transferring MSCOCO to QUORA dataset is not effective, moreover it decreases the performance. All of the transfer methods perform worse than traditional supervised learning without transfer. Among the transfer methods only INIT has a comparable performance to supervised learning with a BLEU score of 22.71 whereas supervised learning achieves a BLEU score of 23.43. This is an unexpected result since it suggests that MSCOCO dataset has no useful knowledge which can help with the training of QUORA dataset. It can be argued that this is a similar problem to the knowledge forgetting problem which is observed with incremental learning without data pooling. It can be hypothesized that since there is enough training data to learn from, the transferred knowledge is overwritten by the target task. In order to investigate this behaviour better, a subset of QUORA dataset with the size of 24,000 paraphrase pairs are randomly selected (data from the first iteration in incremental learning setup) and knowledge transfer is applied from the MSCOCO to this subset. The original dataset contains approximately 120,000 paraphrase pairs. Results show that transfer learning performs better in this case, improving the BLEU score by 4.31. All of the transfer methods improve the model's final score and freeze 1 layer approach performs the best.
 
 Transferring output layers makes no significant improvements to the performance for both QUORA and MSR target datasets.
 
 
 \section{Neural Paraphrase Generation with Active Learning}
 
-Table 4.9 presents the results of active learning on the QUORA dataset. Reverse n-gram which is the exact opposite of n-gram coverage is also experimented as a sampling strategy. Its score for a sentence is defined as 1 subtracted by n-gram coverage score of the sentence. The reason for this is to determine how well n-gram coverage reflects the informativeness of source paraphrases. As it can be seen from the table none of the sampling strategies is able to outperform random sampling. While random sampling achieves a BLEU score of 26.19 at the last iteration, n-gram and reverse n-gram coverage sampling achieve 23.69 and 22.43 respectively. Moreover they are unable to learn any faster than random sampling. Random sampling outperforms the others at all iterations except the first.
+Table 4.9 presents the results of active learning on the QUORA dataset. In the table, RS, NGC and RNGC represent random sampling, n-gram coverage and reverse n-gram coverage respectively. Reverse n-gram which is the exact opposite of n-gram coverage is also experimented as a sampling strategy. Its score for a sentence is defined as 1 subtracted by n-gram coverage score of the sentence. The reason for this is to determine how well n-gram coverage reflects the informativeness of source paraphrases. As it can be seen from the table none of the sampling strategies is able to outperform random sampling. While random sampling achieves a BLEU score of 26.19 at the last iteration, n-gram and reverse n-gram coverage sampling achieve 23.69 and 22.43 respectively. Moreover they are unable to learn any faster than random sampling. Random sampling outperforms the others at all iterations except the first.
 
 \begin{table}[t]
 \centering
@@ -215,12 +218,12 @@ Table 4.9 presents the results of active learning on the QUORA dataset. Reverse 
  RNGC & 5.71 & 14.76 & 19.35 & 20.46 & 21.10 & 21.79 & 22.70 & 22.14 & 22.43 \\ 
  \hline
 \end{tabular}
-\caption{BLEU scores of active learning on the QUORA dataset. Each column represents an iteration, first row shows what percent of the dataset is used in that iteration. Each row except the last represents the performance of a particular sampling strategy which is described in Chapter 3.}
+\caption{BLEU scores of active learning on the QUORA dataset. Each column represents an iteration, first row shows what percent of the dataset is used in that iteration. Each row except the last represents the performance of a particular sampling strategy which is described in \ref{actives}.}
 \end{table}
 
 \section{Neural Paraphrase Generation with Network Expansion}
 
-Table 4.10 presents the results of incremental learning with network expansion on QUORA dataset. As it can be seen from the table, incremental learning with and without data pooling achieve BLEU scores of 25.05 and 15.83 at the last iteration.
+Table 4.10 presents the results of incremental learning with network expansion on QUORA dataset. In the table, NE represents the settings where the first active layer of the network is freezed after each expansion. NE2 represents the settings where no freezing is done. IL1 and IL2 represents incremental learning with and without data pooling, respectively. As it can be seen from the table, incremental learning with and without data pooling achieve BLEU scores of 25.05 and 15.83 at the last iteration.
 
 In the case of incremental learning with data pooling, the model gradually increases its performance except when a new layer is added (iterations 4 and 7). On the other hand, in the case of Incremental learning without data pooling, the model improves until the first extra layer is added (iteration 4). After that point on, adaptiveness of the model diminishes almost completely.
 
@@ -242,7 +245,7 @@ In the case of incremental learning with data pooling, the model gradually incre
   IL2 &  10.68 & 17.58 & 18.79 & 19.06 & 19.50 & 19.46 & 19.35 & 19.54 & 19.70 \\ 
  \hline
 \end{tabular}
-\caption{BLEU scores of incremental learning with and without network expansion on QUORA dataset. Each column represents an iteration, first row shows what percent of the dataset is used in that iteration. IL2-NE2 represents incremental learning without data pooling and without layer freezing.}
+\caption{BLEU scores of incremental learning with and without network expansion (see \ref{incs} for details) on the QUORA dataset. Each column represents an iteration, first row shows what percent of the dataset is used in that iteration. IL2-NE2 represents incremental learning without data pooling and without layer freezing.}
 \end{table}
 
 When the model's layers are not freezed with network expansion, in incremental learning without data pooling, the model's behaviour does not change much, meaning it still loses its adaptiveness while its overall performance increases by 2.23.
@@ -314,7 +317,7 @@ Transferring by adding a surplus layer and freezing the rest does not work well,
 
 Table 4.12 presents the results of transfer method INIT with different incremental learning strategies. QUORA dataset is used as source dataset in this experiment as well. 
 
-As it can be seen from the table while incremental learning with data pooling and baseline incremental learning improves their performance through iterations, incremental learning without data pooling is unable to adapt. Results of incremental learning on MSR dataset is quite consistent with the results on QUORA dataset. Model's behaviour with different incremental learning strategies are similar in both datasets. Only notable difference between two sets of experiments is the underfitting in incremental learning without data pooling on MSR dataset. The model is unable to learn well on training data without pooiling, producing large training errors during training. It can be hypothesized that reason for this is small size of the dataset and there is simply not enough data in one iteration for model to learn properly. 
+As it can be seen from the table while incremental learning with data pooling and baseline incremental learning improve their performance through iterations, incremental learning without data pooling is unable to adapt. Results of incremental learning on MSR dataset is quite consistent with the results on QUORA dataset. Model's behaviour with different incremental learning strategies are similar in both datasets. Only notable difference between two sets of experiments is the underfitting in incremental learning without data pooling on MSR dataset. The model is unable to learn well on training data without pooling, producing large training errors during training. It can be hypothesized that reason for this is small size of the dataset and there is simply not enough data in one iteration for model to learn properly. 
 
 Table 4.13 presents the results of incremental learning with data pooling with INIT and freeze 1 layer transfer methods. MSCOCO dataset is used as source and QUORA dataset is used as target. The same hyperparameter configuration from the previous experiments, is kept.
 
@@ -322,18 +325,17 @@ As it can be seen from the table, the model is able to gradually increase its pe
 
 \section{Discussion}
 
-All the experiments which are conducted regarding incremental learning, show that incremental learning with data pooling has the best performance. Even though the baseline incremental learning (which is basically supervised learning) also increase its performance through time, the difference between BLEU scores clearly shows that continuously training the model leads to a better tuned and more data efficient model. Table 4.14 presents some example paraphrases generated by the model on QUORA dataset. As it can be seen from the table, the generated paraphrases are grammatically correct and shows lexical variety. On both datasets, incremental learning with data pooling is able to outperform traditional supervised learning without seeing 100 percent of the dataset. It is also important to notice the fact that baseline incremental learning and incremental learning with data pooling trains for same number of epochs. Therefore their total training times are approximately the same. 
+All the experiments which are conducted regarding incremental learning, show that incremental learning with data pooling has the best performance. Even though the baseline incremental learning (which is basically supervised learning) also increase its performance through time, the difference between BLEU scores clearly shows that continuously training the model leads to a better tuned and more data efficient model. Table 4.14 presents some selected paraphrases generated by the model on the QUORA dataset. As it can be seen from the table, the model is able to generate grammatically correct paraphrases with lexical variety but there are cases where it fails to capture the original meaning. On both datasets, incremental learning with data pooling is able to outperform traditional supervised learning without seeing 100 percent of the dataset. It is also important to notice the fact that baseline incremental learning and incremental learning with data pooling trains for same number of epochs. Therefore their total training times are approximately the same. 
 
-Before the experiments main concern regarding to the incremental learning was overfitting but the results show that overfitting is avoided because of the regularization mechanisms. Especially dropout mechanism effectively prevents overfitting and makes incremental learning with data pooling possible. Once overfitting is removed from the equation (of course it is impossible to completely eliminate overfitting), it is not hard see why incremental learning with data pooling works better. By continuously training through iterations, the model starts the next iterations with better weight initializations and previous knowledge regarding the dataset. In other words transfer learning is applied between the same dataset (this is also correct for incremental learning without data pooling). Positive effect of incremental learning is evident if learning curve of the model is analyzed. During the experiments it was observed that for each iteration the training and validation errors in the beginning are lower than previous iterations. Another interesting aspect of this learning strategy is the amount of increase in BLEU score through iterations. Rate of performance gain is higher in the early iterations than late iterations on both datasets. One would expect similar increases in BLEU scores on the MSR dataset since it is a very hard dataset to paraphrase. Training and validation errors are much higher on MSR than on QUORA therefore there should be more room for the model to learn in the MSR (stabilizing in later iterations).
+Before the experiments, main concern regarding to the incremental learning was overfitting but the results show that overfitting is avoided because of the regularization mechanisms. Especially the dropout mechanism effectively prevents overfitting and makes incremental learning with data pooling possible. Once overfitting is removed from the equation (of course it is impossible to completely eliminate overfitting), it is not hard see why incremental learning with data pooling works better. By continuously training through iterations, the model starts the next iterations with better weight initializations and previous knowledge regarding the dataset. In other words transfer learning is applied between the same dataset (this is also correct for incremental learning without data pooling). Positive effect of incremental learning is evident if learning curve of the model is analyzed. During the experiments it was observed that for each iteration the training and validation errors in the beginning are lower than previous iterations. Another interesting aspect of this learning strategy is the amount of increase in BLEU score through iterations. Rate of performance gain is higher in the early iterations than late iterations on both datasets. One would expect similar increases in BLEU scores on the MSR dataset since it is a very hard dataset to paraphrase. Training and validation errors are much higher on MSR than on QUORA therefore there should be more room for the model to learn in the MSR (stabilizing in later iterations).
 
 Incremental learning without data pooling does not perform well regarding both final BLEU score and adaptivity which is an expected outcome. The behaviour of this learning strategy was similar in all experiments (on both datasets, with network expansion, transfer learning and different configurations). The model starts improving in first half of the iterations and adaptivity severely diminishes after that point. The interesting finding is the fact that model learns separate iterations rather quickly but fails to improve its performance in test set which suggests catastrophic forgetting between iterations. In the end incremental learning without data pooling does not seem to be a suitable training strategy for paraphrase generation.
 
 With the findings on incremental learning, it can be concluded that the answer to the first research question, "\textit{Can deep neural models effectively adapt and gradually perform in a continuous data stream for paraphrase generation?}", is yes. The results show that with incremental learning baseline and incremental learning with data pooling, a deep neural model can be successfully integrated into human-in-the-loop setting for paraphrase generation. The results also demonstrate the adaptivity of incremental learning with data pooling and its superiority over supervised learning and baseline incremental learning, in this particular setting. Moreover the second research question "\textit{Can the model achieve better or comparable performance than traditional supervised learning by leveraging the data stream?}" can also be partially answered since it is successfully shown that incremental learning learns better and faster on two different paraphrase datasets.
 
 \begin{table}
-\small
-\begin{adjustbox}{width=1.2\textwidth,center=\textwidth} 
- \begin{tabular}{|c c c|} 
+\begin{adjustbox}{width=1\textwidth}
+ \begin{tabular}{||c c c||} 
  \hline
  Label & Sentence & \\ [0.5ex] 
  \hline
@@ -355,9 +357,15 @@ With the findings on incremental learning, it can be concluded that the answer t
  \hline
  generated & How can I maintain my long distance relationship to the best of my ability? &  \\
  \hline
+ source & What do you think is wrong with indian schools and education? &  \\
+ \hline
+ target & What is wrong with the current indian education? &  \\
+ \hline
+ generated & What do you think of indian school of education? &  \\
+ \hline
 \end{tabular}
 \end{adjustbox}
-\caption{Example paraphrase pairs from the QUORA dataset.}
+\caption{Selected example paraphrase pairs from the QUORA dataset.}
 \end{table}
 
 

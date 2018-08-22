@@ -88,11 +88,14 @@ Paszke, A. (2016).
 \newblock Lstm implementation explained.
 
 \bibitem[Pavlick et~al., 2015]{ppdb}
-Pavlick, E., Ganitkevitch, J., Rastogi, P., Durme, B.~V., and Callison-Burch,
+Pavlick, E., Rastogi, P., Ganitkevitch, J., Van~Durme, B., and Callison-Burch,
   C. (2015).
 \newblock Ppdb 2.0: Better paraphrase ranking, fine-grained entailment
   relations, word embeddings, and style classification.
-\newblock In {\em ACL}.
+\newblock In {\em Proceedings of the 53rd Annual Meeting of the Association for
+  Computational Linguistics and the 7th International Joint Conference on
+  Natural Language Processing (Volume 2: Short Papers)}, pages 425--430.
+  Association for Computational Linguistics.
 
 \bibitem[Pennington et~al., 2014]{glove}
 Pennington, J., Socher, R., and Manning, C.~D. (2014).

@@ -15,21 +15,21 @@
 \contentsline {section}{\numberline {3.1}Model Details}{16}{section.3.1}
 \contentsline {section}{\numberline {3.2}Datasets and Evaluation Metric}{16}{section.3.2}
 \contentsline {section}{\numberline {3.3}Experimental Setups}{18}{section.3.3}
-\contentsline {section}{\numberline {3.4}Incremental Learning Strategies}{18}{section.3.4}
+\contentsline {section}{\numberline {3.4}Incremental Learning Strategies}{19}{section.3.4}
 \contentsline {subsection}{\numberline {3.4.1}Incremental Learning with Data Pooling (IL1)}{20}{subsection.3.4.1}
 \contentsline {subsection}{\numberline {3.4.2}Incremental Learning without Data Pooling (IL2)}{21}{subsection.3.4.2}
-\contentsline {subsection}{\numberline {3.4.3}Incremental Learning with Network Expansion (IL-NE)}{21}{subsection.3.4.3}
+\contentsline {subsection}{\numberline {3.4.3}Incremental Learning with Network Expansion (IL-NE)}{22}{subsection.3.4.3}
 \contentsline {subsection}{\numberline {3.4.4}Incremental Learning Baseline (IL3)}{22}{subsection.3.4.4}
 \contentsline {subsection}{\numberline {3.4.5}Model Regularization in Incremental Learning}{23}{subsection.3.4.5}
 \contentsline {section}{\numberline {3.5}Transfer Learning Strategies}{24}{section.3.5}
-\contentsline {section}{\numberline {3.6}Active Learning Strategies}{25}{section.3.6}
+\contentsline {section}{\numberline {3.6}Active Learning Strategies}{26}{section.3.6}
 \contentsline {chapter}{\numberline {4}Results}{28}{chapter.4}
 \contentsline {section}{\numberline {4.1}Neural Paraphrase Generation with Incremental Learning}{28}{section.4.1}
-\contentsline {section}{\numberline {4.2}Neural Paraphrase Generation with Transfer Learning}{32}{section.4.2}
+\contentsline {section}{\numberline {4.2}Neural Paraphrase Generation with Transfer Learning}{33}{section.4.2}
 \contentsline {section}{\numberline {4.3}Neural Paraphrase Generation with Active Learning}{35}{section.4.3}
-\contentsline {section}{\numberline {4.4}Neural Paraphrase Generation with Network Expansion}{35}{section.4.4}
+\contentsline {section}{\numberline {4.4}Neural Paraphrase Generation with Network Expansion}{36}{section.4.4}
 \contentsline {section}{\numberline {4.5}Combining Different Strategies}{36}{section.4.5}
 \contentsline {section}{\numberline {4.6}Discussion}{38}{section.4.6}
-\contentsline {chapter}{\numberline {5}Conclusion}{42}{chapter.5}
-\contentsline {chapter}{\numberline {6}Future Work}{44}{chapter.6}
+\contentsline {chapter}{\numberline {5}Conclusion}{43}{chapter.5}
+\contentsline {chapter}{\numberline {6}Future Work}{45}{chapter.6}
 \contentsline {chapter}{Bibliography}{47}{section*.5}

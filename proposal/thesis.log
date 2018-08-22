@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2016.3.16)  20 AUG 2018 15:30
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2016.3.16)  22 AUG 2018 19:04
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -724,9 +724,9 @@ hhLogoL.pdf>] [2] [3] (./thesis.toc [4
  [5] [6
 
 ] (./thesis.lof
-Overfull \hbox (7.55156pt too wide) in paragraph at lines 14--14
- \OT1/cmr/m/n/12 from all pre-vous it-er-a-tions, hy-per-pa-ram-e-ters re-initi
-alized and weights 
+Overfull \hbox (11.1418pt too wide) in paragraph at lines 14--14
+ \OT1/cmr/m/n/12 from all pre-vi-ous it-er-a-tions, hy-per-pa-ram-e-ters re-ini
+tialized and weights 
  []
 
 
@@ -742,6 +742,12 @@ rained from scratch
  [7
 
 ] (./thesis.lot
+Overfull \hbox (13.49411pt too wide) in paragraph at lines 8--8
+ \OT1/cmr/m/n/12 in []3.4[]. The last row rep-re-sents the re-sults from [[]].[
+] [][]  
+ []
+
+
 Overfull \hbox (11.31422pt too wide) in paragraph at lines 10--10
  [][] [][]\OT1/cmr/m/n/12 BLEU scores of in-cre-men-tal learn-ing with data poo
 l-ing on the QUORA 
@@ -767,7 +773,7 @@ ool-ing on QUORA
 
  (./1introduction.tex [1]
 Chapter 1.
-<./src/hil.pdf, id=349, 763.85374pt x 533.995pt>
+<./src/hil.pdf, id=355, 763.85374pt x 533.995pt>
 File: ./src/hil.pdf Graphic file (type pdf)
  <use ./src/hil.pdf>
 Package pdftex.def Info: ./src/hil.pdf used on input line 8.
@@ -779,7 +785,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [2
 
 ] [3 <./src/hil.pdf>]
-<./src/human-in-the-loop.png, id=370, 771.88374pt x 543.02875pt>
+<./src/human-in-the-loop.png, id=376, 771.88374pt x 543.02875pt>
 File: ./src/human-in-the-loop.png Graphic file (type png)
 
 <use ./src/human-in-the-loop.png>
@@ -793,21 +799,16 @@ File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 40.
-
-Overfull \hbox (4.48216pt too wide) in paragraph at lines 46--47
-[]\OT1/cmr/m/n/12 Can adap-tive learn-ing im-prove ac-cu-racy by adding more ge
-n-er-al-iza-tion power?
- []
-
-[6] [7] [8]) (./2methods.tex [9]
+ [6] [7] [8])
+(./2methods.tex [9]
 Chapter 2.
-<./src/rnn.png, id=433, 62.51355pt x 24.3309pt>
+<./src/rnn.png, id=439, 62.51355pt x 24.3309pt>
 File: ./src/rnn.png Graphic file (type png)
  <use ./src/rnn.png>
 Package pdftex.def Info: ./src/rnn.png used on input line 8.
 (pdftex.def)             Requested size: 419.16621pt x 163.17831pt.
 
-<./src/lstm.png, id=435, 32.09993pt x 34.50893pt>
+<./src/lstm.png, id=441, 32.09993pt x 34.50893pt>
 File: ./src/lstm.png Graphic file (type png)
  <use ./src/lstm.png>
 Package pdftex.def Info: ./src/lstm.png used on input line 20.
@@ -815,7 +816,7 @@ Package pdftex.def Info: ./src/lstm.png used on input line 20.
  [10
 
 ]
-[11 <./src/rnn.png>] <./src/seq2seq.pdf, id=460, 944.52875pt x 324.21124pt>
+[11 <./src/rnn.png>] <./src/seq2seq.pdf, id=466, 944.52875pt x 324.21124pt>
 File: ./src/seq2seq.pdf Graphic file (type pdf)
 
 <use ./src/seq2seq.pdf>
@@ -829,7 +830,7 @@ Overfull \hbox (5.8678pt too wide) in paragraph at lines 76--78
 
 Underfull \vbox (badness 6775) has occurred while \output is active []
 
- [12 <./src/lstm.png>] <./src/transfer-learning.png, id=466, 56.6115pt x 38.423
+ [12 <./src/lstm.png>] <./src/transfer-learning.png, id=472, 56.6115pt x 38.423
 55pt>
 File: ./src/transfer-learning.png Graphic file (type png)
 
@@ -837,7 +838,7 @@ File: ./src/transfer-learning.png Graphic file (type png)
 Package pdftex.def Info: ./src/transfer-learning.png used on input line 88.
 (pdftex.def)             Requested size: 419.2959pt x 284.65456pt.
  [13 <./src/seq2seq.pdf>] [14 <./src/transfer-learning.png (PNG copy)>]
-<./src/active-learning.png, id=486, 57.816pt x 43.362pt>
+<./src/active-learning.png, id=492, 57.816pt x 43.362pt>
 File: ./src/active-learning.png Graphic file (type png)
 
 <use ./src/active-learning.png>
@@ -845,7 +846,7 @@ Package pdftex.def Info: ./src/active-learning.png used on input line 104.
 (pdftex.def)             Requested size: 419.19043pt x 284.64635pt.
 ) (./3approach.tex [15 <./src/active-learning.png>]
 Chapter 3.
-<./src/residualLSTM.png, id=494, 26.92058pt x 17.76637pt>
+<./src/residualLSTM.png, id=500, 26.92058pt x 17.76637pt>
 File: ./src/residualLSTM.png Graphic file (type png)
 
 <use ./src/residualLSTM.png>
@@ -858,36 +859,35 @@ Overfull \hbox (2.60176pt too wide) in paragraph at lines 23--24
 
 [16
 
-] [17 <./src/residualLSTM.png>] [18] [19]
-<./src/IL1.pdf, id=524, 852.18375pt x 538.01pt>
+] [17 <./src/residualLSTM.png>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [18]
+[19] <./src/IL1.pdf, id=530, 852.18375pt x 538.01pt>
 File: ./src/IL1.pdf Graphic file (type pdf)
  <use ./src/IL1.pdf>
 Package pdftex.def Info: ./src/IL1.pdf used on input line 83.
 (pdftex.def)             Requested size: 419.16621pt x 264.63695pt.
- [20 <./src/IL1.pdf>] <./src/IL2.pdf, id=540, 852.18375pt x 538.01pt>
+
+[20 <./src/IL1.pdf>] <./src/IL2.pdf, id=546, 852.18375pt x 538.01pt>
 File: ./src/IL2.pdf Graphic file (type pdf)
- <use ./src/IL2.pdf>
+
+<use ./src/IL2.pdf>
 Package pdftex.def Info: ./src/IL2.pdf used on input line 109.
 (pdftex.def)             Requested size: 419.16621pt x 264.63695pt.
-
-[21] <./src/IL3.pdf, id=545, 852.18375pt x 538.01pt>
+ [21] [22 <./src/IL2.pdf>]
+<./src/IL3.pdf, id=567, 852.18375pt x 538.01pt>
 File: ./src/IL3.pdf Graphic file (type pdf)
  <use ./src/IL3.pdf>
 Package pdftex.def Info: ./src/IL3.pdf used on input line 141.
 (pdftex.def)             Requested size: 419.16621pt x 264.63695pt.
-
-Underfull \vbox (badness 5133) has occurred while \output is active []
-
- [22 <./src/IL2.pdf>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [23 <./src/IL3.pdf>]
+ [23 <./src/IL3.pdf>] [24]
 Overfull \hbox (5.23077pt too wide) in paragraph at lines 172--173
 []\OT1/cmr/m/n/12 Does trans-fer suc-cess de-pend on the char-ac-ter-is-tics of
  the par-tic-i-pant datasets? 
  []
 
-[24] [25] [26]) (./4results.tex [27]
+[25] [26]) (./4results.tex [27]
 Chapter 4.
 
 Overfull \hbox (0.85175pt too wide) in paragraph at lines 27--28
@@ -897,52 +897,42 @@ ate-gies on the MSR dataset.
 
 [28
 
-]
-Overfull \hbox (2.82857pt too wide) in paragraph at lines 38--51
- [][] 
- []
-
-[29] [30] [31] [32]
-Underfull \vbox (badness 3396) has occurred while \output is active []
-
- [33]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+] [29] [30] [31] [32] [33]
+Underfull \vbox (badness 1931) has occurred while \output is active []
 
  [34]
-Overfull \hbox (0.1616pt too wide) in paragraph at lines 221--221
+Overfull \hbox (0.1616pt too wide) in paragraph at lines 224--224
 []\OT1/cmr/bx/n/17.28 Neural Para-phrase Gen-er-a-tion with Net-work
  []
 
 
-Overfull \hbox (4.44063pt too wide) in paragraph at lines 230--245
- [][] 
- []
-
-
-Underfull \vbox (badness 6332) has occurred while \output is active []
+Underfull \vbox (badness 2478) has occurred while \output is active []
 
  [35]
-[36]
-Overfull \hbox (4.37141pt too wide) in paragraph at lines 301--312
+Overfull \hbox (4.44063pt too wide) in paragraph at lines 233--248
  [][] 
  []
 
-[37] [38] [39] [40]) (./5conclusion.tex [41]
+[36]
+Overfull \hbox (4.37141pt too wide) in paragraph at lines 304--315
+ [][] 
+ []
+
+[37] [38] [39] [40] [41]) (./5conclusion.tex [42]
 Chapter 5.
-[42
+[43
 
-]) (./6futurework.tex [43]
+]) (./6futurework.tex [44]
 Chapter 6.
-[44
+[45
 
-]) [45] [46
-
-] (./thesis.bbl
+]) [46] (./thesis.bbl
 Underfull \hbox (badness 10000) in paragraph at lines 30--35
 []\OT1/cmr/m/n/12 Gonz^^Salez-Rubio, J., Ortiz-Mart^^S^^Pnez, D., and
  []
 
 [47
+
 
 ] [48]) [49]
 Missing character: There is no â in font cmr12!
@@ -967,10 +957,10 @@ LaTeX Warning: There were multiply-defined labels.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 387.
  ) 
 Here is how much of TeX's memory you used:
- 10810 strings out of 493089
- 154873 string characters out of 6134842
- 283943 words of memory out of 5000000
- 13880 multiletter control sequences out of 15000+600000
+ 10816 strings out of 493089
+ 154951 string characters out of 6134842
+ 283110 words of memory out of 5000000
+ 13886 multiletter control sequences out of 15000+600000
  15225 words of font info for 58 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
  40i,12n,67p,2279b,507s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -985,10 +975,10 @@ cal/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local
 /texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/
 texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/te
 xlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on thesis.pdf (61 pages, 1268851 bytes).
+Output written on thesis.pdf (61 pages, 1275007 bytes).
 PDF statistics:
- 805 PDF objects out of 1000 (max. 8388607)
- 692 compressed objects within 7 object streams
+ 825 PDF objects out of 1000 (max. 8388607)
+ 705 compressed objects within 8 object streams
  164 named destinations out of 1000 (max. 500000)
  325 words of extra memory for PDF output out of 10000 (max. 10000000)
 

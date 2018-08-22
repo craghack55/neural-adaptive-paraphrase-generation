@@ -4,46 +4,46 @@ The top-level auxiliary file: thesis.aux
 The style file: apalike.bst
 Database file #1: thesis.bib
 Warning--entry type for "paszke" isn't style-file defined
---line 219 of file thesis.bib
+--line 253 of file thesis.bib
 You've used 28 entries,
             1935 wiz_defined-function locations,
-            611 strings with 8710 characters,
-and the built_in function-call counts, 11689 in all, are:
-= -- 1099
+            612 strings with 8906 characters,
+and the built_in function-call counts, 11878 in all, are:
+= -- 1126
 > -- 676
-< -- 11
+< -- 12
 + -- 244
 - -- 238
-* -- 980
-:= -- 2119
-add.period$ -- 87
+* -- 992
+:= -- 2137
+add.period$ -- 88
 call.type$ -- 28
 change.case$ -- 259
 chr.to.int$ -- 28
 cite$ -- 28
-duplicate$ -- 433
-empty$ -- 681
+duplicate$ -- 442
+empty$ -- 694
 format.name$ -- 274
-if$ -- 2235
+if$ -- 2285
 int.to.chr$ -- 1
 int.to.str$ -- 0
 missing$ -- 26
 newline$ -- 142
 num.names$ -- 84
-pop$ -- 233
+pop$ -- 231
 preamble$ -- 1
 purify$ -- 259
 quote$ -- 0
-skip$ -- 346
+skip$ -- 359
 stack$ -- 0
-substring$ -- 503
-swap$ -- 64
-text.length$ -- 4
+substring$ -- 535
+swap$ -- 73
+text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 168
 warning$ -- 0
-while$ -- 70
+while$ -- 73
 width$ -- 0
-write$ -- 368
+write$ -- 370
 (There was 1 warning)
